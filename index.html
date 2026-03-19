@@ -4,1386 +4,289 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Pathways Attendance v3.0</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fraunces:wght@700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fraunces:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #f8f7f4;
-  --card: #ffffff;
-  --primary: #3d5a80;
-  --primary-light: #e8eef4;
-  --primary-dark: #2c4560;
-  --staff: #b56b45;
-  --staff-light: #f5ebe4;
-  --admin: #6b5b73;
-  --admin-light: #f0ecf2;
-  --green: #4a8c5c;
-  --green-light: #e7f2ea;
-  --amber: #c08530;
-  --amber-light: #faf3e6;
-  --red: #b84545;
-  --red-light: #fae8e8;
-  --text: #1c1c1e;
-  --text-secondary: #86868b;
-  --border: #e5e5e7;
-  --shadow: 0 1px 3px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.03);
-  --shadow-lg: 0 4px 24px rgba(0,0,0,.08);
-  --radius: 14px;
-  --radius-sm: 10px;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-}
+:root{--bg:#f4f3f0;--card:#fff;--pri:#3d5a80;--pri-lt:#e8eef4;--pri-dk:#2c4560;--staff:#b56b45;--staff-lt:#f5ebe4;--grn:#4a8c5c;--grn-lt:#e7f2ea;--amb:#c08530;--amb-lt:#faf3e6;--red:#b84545;--red-lt:#fae8e8;--adm:#6b5b73;--adm-lt:#f0ecf2;--txt:#1c1c1e;--mut:#86868b;--bdr:#e5e5e7;--r:16px;--rs:12px;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;-webkit-font-smoothing:antialiased}
 
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
-html { height: 100%; }
-body {
-  font-family: 'Outfit', -apple-system, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100%;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
+/* Location bar */
+.lb{background:#1b1b1b;padding:calc(8px + var(--st)) 16px 8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;position:sticky;top:0;z-index:110}
+.lb button{padding:8px 20px;border-radius:24px;border:2px solid rgba(255,255,255,.12);background:0;color:rgba(255,255,255,.5);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:.15s}
+.lb button:hover{border-color:rgba(255,255,255,.3);color:#fff}
+.lb button.on{background:var(--pri);border-color:var(--pri);color:#fff}
 
-/* ===== TOP BAR ===== */
-.topbar {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(248,247,244,.92);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  padding: calc(8px + var(--safe-top)) 20px 10px;
-}
-.topbar-inner {
-  max-width: 960px; margin: 0 auto;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.topbar-left { display: flex; align-items: center; gap: 12px; }
-.topbar-title {
-  font-family: 'Fraunces', serif;
-  font-size: 1.2rem; font-weight: 800; color: var(--primary);
-}
-.topbar-version {
-  font-size: .6rem; color: var(--text-secondary);
-  font-weight: 500; letter-spacing: .5px;
-}
-.loc-select {
-  padding: 6px 28px 6px 12px; border-radius: 8px;
-  border: 1.5px solid var(--border); background: var(--card);
-  font-family: 'Outfit', sans-serif; font-size: .82rem; font-weight: 500;
-  color: var(--text); cursor: pointer;
-  appearance: none; -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2386868b'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 8px center;
-}
-.topbar-right { display: flex; align-items: center; gap: 10px; }
-.sync-indicator {
-  font-size: .68rem; color: var(--text-secondary); font-weight: 500;
-  display: flex; align-items: center; gap: 4px;
-}
-.sync-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--green); display: inline-block;
-}
-.clock {
-  font-size: .72rem; font-weight: 500; color: var(--text-secondary);
-  font-variant-numeric: tabular-nums;
-}
+/* Header */
+.hd{background:rgba(244,243,240,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);padding:12px 20px;position:sticky;top:46px;z-index:100}
+.hd-i{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.hd-t{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:800;color:var(--pri)}
+.hd-r{display:flex;align-items:center;gap:12px}
+.hd-c{font-size:.76rem;font-weight:500;color:var(--mut);font-variant-numeric:tabular-nums}
+.hd-s{font-size:.66rem;color:var(--mut);display:flex;align-items:center;gap:4px}
+.sd{width:6px;height:6px;border-radius:50%;background:var(--grn)}
+.gear{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--bdr);background:var(--card);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;color:var(--mut)}
+.gear:hover{border-color:var(--adm);color:var(--adm)}
 
-/* ===== CONTROLS ROW ===== */
-.controls {
-  max-width: 960px; margin: 12px auto 0; padding: 0 20px;
-  display: flex; gap: 10px; align-items: stretch;
-}
-.ctrl-field {
-  flex: 1; background: var(--card); border-radius: var(--radius-sm);
-  padding: 10px 14px; border: 1.5px solid var(--border);
-  transition: border-color .15s;
-}
-.ctrl-field:focus-within { border-color: var(--primary); }
-.ctrl-label {
-  font-size: .62rem; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .8px; color: var(--text-secondary); margin-bottom: 3px;
-}
-.ctrl-input {
-  width: 100%; border: none; outline: none; background: transparent;
-  font-family: 'Outfit', sans-serif; font-size: .92rem; font-weight: 500;
-  color: var(--text);
-}
-.ctrl-input::placeholder { color: #c7c7cc; }
+.mn{max-width:960px;margin:0 auto;padding:20px 20px 40px}
 
-/* ===== MAIN CONTENT ===== */
-.main { max-width: 960px; margin: 0 auto; padding: 16px 20px calc(72px + var(--safe-bottom)); }
-.page { display: none; }
-.page.active { display: block; }
+/* Date row */
+.dr{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:10px 14px;background:var(--card);border-radius:var(--rs);border:1.5px solid var(--bdr)}
+.dr label{font-size:.72rem;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
+.dr input{border:0;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;color:var(--txt);background:0;flex:1}.dr input:focus{outline:0}
 
-/* ===== SECTION HEADERS ===== */
-.section-head {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 10px;
-}
-.section-title {
-  font-size: .72rem; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .8px; color: var(--text-secondary);
-}
-.section-count {
-  font-size: .68rem; font-weight: 500; color: var(--text-secondary);
-  background: var(--primary-light); padding: 3px 10px; border-radius: 20px;
-}
-.section-count.staff-count { background: var(--staff-light); }
+/* Step bar */
+.sb{display:flex;align-items:center;margin-bottom:20px}
+.sbd{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;background:var(--bdr);color:var(--mut);transition:.2s;flex-shrink:0}
+.sbd.now{background:var(--pri);color:#fff;transform:scale(1.1)}.sbd.ok{background:var(--grn);color:#fff}
+.sbl{flex:1;height:2px;background:var(--bdr);margin:0 4px}.sbl.ok{background:var(--grn)}
 
-/* ===== HOME FILTER PILLS ===== */
-.filter-row {
-  display: flex; gap: 6px; overflow-x: auto; padding-bottom: 12px;
-  scrollbar-width: none; -ms-overflow-style: none;
-}
-.filter-row::-webkit-scrollbar { display: none; }
-.filter-pill {
-  flex-shrink: 0; padding: 7px 16px; border-radius: 20px;
-  border: 1.5px solid var(--border); background: var(--card);
-  font-family: 'Outfit', sans-serif; font-size: .76rem; font-weight: 500;
-  color: var(--text-secondary); cursor: pointer; transition: all .15s;
-  white-space: nowrap;
-}
-.filter-pill:hover { border-color: var(--primary); color: var(--primary); }
-.filter-pill.active {
-  background: var(--primary); color: #fff;
-  border-color: var(--primary);
-}
-.filter-pill .pill-count {
-  display: inline-block; margin-left: 4px;
-  font-size: .64rem; opacity: .7;
-}
+/* Wizard steps - all pre-loaded, just toggle visibility */
+.ws{display:none}.ws.on{display:block}
 
-/* ===== PARTICIPANT CARDS ===== */
-.p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-@media (max-width: 700px) { .p-grid { grid-template-columns: 1fr; } }
+.wt{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:800;margin-bottom:4px}
+.wst{font-size:.88rem;color:var(--mut);margin-bottom:20px}
 
-.p-card {
-  background: var(--card); border-radius: var(--radius-sm);
-  padding: 14px 16px; border: 1.5px solid var(--border);
-  display: flex; flex-direction: column; gap: 8px;
-  transition: all .15s;
-}
-.p-card:active { transform: scale(.98); }
-.p-card-top { display: flex; justify-content: space-between; align-items: flex-start; }
-.p-name { font-size: .92rem; font-weight: 600; line-height: 1.2; }
-.p-meta {
-  font-size: .72rem; color: var(--text-secondary); font-weight: 400;
-  margin-top: 1px;
-}
-.p-status {
-  flex-shrink: 0; padding: 4px 10px; border-radius: 6px;
-  font-size: .66rem; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .4px;
-}
-.p-status.available { background: var(--bg); color: var(--text-secondary); }
-.p-status.signed-in { background: var(--amber-light); color: var(--amber); }
-.p-status.locked { background: var(--green-light); color: var(--green); }
+/* Home grid */
+.hg{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+.hc{background:var(--card);border:2px solid var(--bdr);border-radius:var(--r);padding:20px 16px;text-align:center;cursor:pointer;transition:.12s;user-select:none;-webkit-user-select:none}
+.hc:active{transform:scale(.96)}.hc.sel{border-color:var(--pri);background:var(--pri-lt)}
+.hc .hi{font-size:1.8rem;margin-bottom:6px}.hc .hn{font-size:.92rem;font-weight:700}.hc .hcn{font-size:.72rem;color:var(--mut);margin-top:3px}
+.hc.sel .hn{color:var(--pri)}
+.hc.stf{border-style:dashed}.hc.stf.sel{border-color:var(--staff);background:var(--staff-lt)}.hc.stf.sel .hn{color:var(--staff)}
 
-.p-card-actions { display: flex; gap: 6px; align-items: center; }
-.p-time-display {
-  font-size: .76rem; color: var(--text-secondary); font-weight: 500;
-  font-variant-numeric: tabular-nums;
-}
-.p-time-input {
-  flex: 1; padding: 8px 10px; border: 1.5px solid var(--border);
-  border-radius: 8px; font-family: 'Outfit', sans-serif;
-  font-size: .85rem; background: var(--bg); color: var(--text);
-  min-width: 0;
-}
-.p-time-input:focus { border-color: var(--primary); outline: none; }
+/* Person cards */
+.ps{margin-bottom:16px}
+.psh{display:flex;justify-content:space-between;align-items:center;padding:8px 4px;border-bottom:2px solid var(--bdr);margin-bottom:8px}
+.pst{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--mut)}
+.psa{font-size:.72rem;font-weight:600;color:var(--pri);background:0;border:0;cursor:pointer;padding:4px 8px}
+.pc{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--card);border:2px solid var(--bdr);border-radius:var(--rs);margin-bottom:6px;cursor:pointer;transition:.12s;user-select:none}
+.pc:active{transform:scale(.98)}.pc.sel{border-color:var(--pri);background:var(--pri-lt)}
+.ck{width:28px;height:28px;border-radius:8px;border:2px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;background:var(--card);transition:.12s}
+.pc.sel .ck{background:var(--pri);border-color:var(--pri);color:#fff}
+.pi{flex:1}.pn{font-size:.95rem;font-weight:600}.pm{font-size:.72rem;color:var(--mut)}
+.ps-s{font-size:.66rem;font-weight:600;padding:3px 8px;border-radius:6px;flex-shrink:0}
+.ps-in{background:var(--amb-lt);color:var(--amb)}.ps-lk{background:var(--grn-lt);color:var(--grn)}
 
-/* ===== ACTION BUTTONS ===== */
-.btn {
-  padding: 9px 18px; border-radius: 8px; border: none;
-  font-family: 'Outfit', sans-serif; font-size: .78rem;
-  font-weight: 600; cursor: pointer; transition: all .12s;
-  white-space: nowrap;
-}
-.btn:active { transform: scale(.96); }
-.btn-primary { background: var(--primary); color: #fff; }
-.btn-primary:hover { background: var(--primary-dark); }
-.btn-sign-in { background: var(--primary); color: #fff; }
-.btn-out { background: var(--amber); color: #fff; }
-.btn-staff { background: var(--staff); color: #fff; }
-.btn-admin { background: var(--admin); color: #fff; }
-.btn-danger { background: var(--red); color: #fff; }
-.btn-ghost {
-  background: transparent; color: var(--text-secondary);
-  border: 1.5px solid var(--border);
-}
-.btn-ghost:hover { border-color: var(--text-secondary); }
-.btn-sm { padding: 6px 12px; font-size: .72rem; }
-.btn-icon {
-  width: 36px; height: 36px; padding: 0; display: flex;
-  align-items: center; justify-content: center; border-radius: 8px;
-  border: 1.5px solid var(--border); background: var(--card);
-  cursor: pointer; font-size: .9rem; color: var(--text-secondary);
-  transition: all .12s;
-}
-.btn-icon:hover { border-color: var(--primary); color: var(--primary); }
+/* Staff add */
+.sa{display:flex;gap:8px;margin-bottom:10px}
+.si{flex:1;padding:12px 14px;border:2px solid var(--bdr);border-radius:var(--rs);font-family:'Outfit',sans-serif;font-size:.9rem;background:var(--card)}.si:focus{border-color:var(--staff);outline:0}
 
-/* Card states */
-.p-card.is-signed-in { border-color: var(--amber); border-left: 3px solid var(--amber); }
-.p-card.is-locked { border-color: var(--green); border-left: 3px solid var(--green); background: #fcfdfb; }
+/* Driver cards */
+.dc{display:flex;align-items:center;gap:12px;padding:16px;background:var(--card);border:2px solid var(--bdr);border-radius:var(--rs);margin-bottom:8px;cursor:pointer;transition:.12s;user-select:none}
+.dc:active{transform:scale(.98)}.dc.sel{border-color:var(--pri);background:var(--pri-lt)}
+.dc.sel .ck{background:var(--pri);border-color:var(--pri);color:#fff}
+.dn{font-size:1rem;font-weight:600;flex:1}.df{font-size:.7rem;color:var(--mut)}
+.dx{width:32px;height:32px;border-radius:8px;border:0;background:0;cursor:pointer;font-size:.9rem;color:var(--mut);display:flex;align-items:center;justify-content:center}
+.dx:hover{background:var(--red-lt);color:var(--red)}
 
-/* ===== QUICK GROUP ENTRY ===== */
-.qge {
-  background: var(--card); border-radius: var(--radius);
-  border: 1.5px solid var(--border); padding: 16px;
-  margin-bottom: 14px;
-}
-.qge-header {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 10px; cursor: pointer;
-}
-.qge-title { font-size: .78rem; font-weight: 600; color: var(--primary); }
-.qge-toggle {
-  font-size: .72rem; color: var(--text-secondary);
-  transition: transform .2s;
-}
-.qge-body { display: none; }
-.qge.open .qge-body { display: block; }
-.qge.open .qge-toggle { transform: rotate(180deg); }
-.qge-row { display: flex; gap: 8px; margin-bottom: 8px; }
-.qge-select {
-  flex: 1; padding: 9px 12px; border: 1.5px solid var(--border);
-  border-radius: 8px; font-family: 'Outfit', sans-serif;
-  font-size: .85rem; background: var(--card);
-}
-.qge-chips {
-  display: flex; flex-wrap: wrap; gap: 6px; min-height: 32px;
-  padding: 8px 0;
-}
-.qge-chip {
-  display: flex; align-items: center; gap: 4px;
-  padding: 5px 10px; border-radius: 6px;
-  background: var(--primary-light); font-size: .74rem; font-weight: 500;
-  color: var(--primary);
-}
-.qge-chip button {
-  background: none; border: none; cursor: pointer;
-  color: var(--primary); font-size: .8rem; padding: 0 2px;
-  opacity: .6;
-}
-.qge-chip button:hover { opacity: 1; }
-.qge-times {
-  display: flex; gap: 8px; align-items: end; padding-top: 8px;
-  border-top: 1px solid var(--border);
-}
-.qge-times > div { flex: 1; }
+/* Action toggle */
+.at{display:flex;margin-bottom:20px;border-radius:var(--r);overflow:hidden;border:2px solid var(--bdr)}
+.ao{flex:1;padding:18px;text-align:center;font-size:1rem;font-weight:700;cursor:pointer;transition:.12s;background:var(--card);border:0;font-family:'Outfit',sans-serif;color:var(--mut)}
+.ao.ai{background:var(--grn);color:#fff}.ao.ao-out{background:var(--amb);color:#fff}
 
-/* ===== STAFF CARDS ===== */
-.s-card {
-  background: var(--card); border-radius: var(--radius-sm);
-  padding: 14px 16px; border: 1.5px solid var(--border);
-  margin-bottom: 8px; transition: all .15s;
-}
-.s-card.is-signed-in { border-color: var(--amber); border-left: 3px solid var(--amber); }
-.s-card.is-locked { border-color: var(--green); border-left: 3px solid var(--green); background: #fcfdfb; }
-.s-card-row { display: flex; gap: 8px; align-items: center; }
-.s-input {
-  flex: 1; padding: 8px 10px; border: 1.5px solid var(--border);
-  border-radius: 8px; font-family: 'Outfit', sans-serif;
-  font-size: .85rem; background: var(--bg); min-width: 0;
-}
-.s-input:focus { border-color: var(--staff); outline: none; }
+/* Time display */
+.td{text-align:center;margin:20px 0}
+.td input[type="time"]{font-family:'Outfit',sans-serif;font-size:2.4rem;font-weight:700;border:0;background:0;color:var(--txt);text-align:center;padding:10px;width:220px}.td input:focus{outline:0}
+.tl{font-size:.78rem;color:var(--mut);margin-top:4px}
 
-/* ===== ADMIN ===== */
-.admin-lock {
-  text-align: center; padding: 60px 20px;
-}
-.admin-lock h2 {
-  font-family: 'Fraunces', serif; font-size: 1.3rem;
-  color: var(--admin); margin-bottom: 6px;
-}
-.admin-lock p { font-size: .85rem; color: var(--text-secondary); margin-bottom: 20px; }
-.pin-input {
-  width: 140px; text-align: center; padding: 12px;
-  border: 2px solid var(--border); border-radius: 10px;
-  font-family: 'Outfit', sans-serif; font-size: 1.2rem;
-  font-weight: 600; letter-spacing: 8px;
-}
-.pin-input:focus { border-color: var(--admin); outline: none; }
+/* Confirm summary */
+.cs{background:var(--card);border-radius:var(--r);border:1.5px solid var(--bdr);padding:16px;margin-bottom:16px;max-height:200px;overflow-y:auto}
+.cs-l{font-size:.66rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--mut);margin-bottom:6px}
+.cs-i{display:flex;justify-content:space-between;font-size:.85rem;line-height:1.8}.cs-i span:last-child{color:var(--mut);font-size:.76rem}
 
-.admin-dash { display: none; }
-.admin-dash.unlocked { display: block; }
-.admin-section {
-  background: var(--card); border-radius: var(--radius);
-  border: 1.5px solid var(--border); padding: 18px;
-  margin-bottom: 12px;
-}
-.admin-section h3 {
-  font-size: .82rem; font-weight: 700; color: var(--admin);
-  margin-bottom: 12px;
-}
-.admin-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.manage-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 0; border-bottom: 1px solid var(--border);
-  font-size: .82rem;
-}
-.manage-row:last-child { border-bottom: none; }
-.manage-name { font-weight: 500; }
-.manage-detail { color: var(--text-secondary); font-size: .74rem; }
-.add-form {
-  display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;
-}
-.add-form input, .add-form select {
-  padding: 8px 12px; border: 1.5px solid var(--border);
-  border-radius: 8px; font-family: 'Outfit', sans-serif;
-  font-size: .82rem; background: var(--bg);
-}
-.add-form input:focus, .add-form select:focus { border-color: var(--admin); outline: none; }
-.home-chip {
-  display: inline-flex; align-items: center; gap: 4px;
-  padding: 4px 10px; border-radius: 6px; font-size: .72rem;
-  font-weight: 500; background: var(--admin-light); color: var(--admin);
-  margin: 0 4px 4px 0;
-}
-.home-chip button {
-  background: none; border: none; cursor: pointer;
-  color: var(--admin); font-size: .7rem; opacity: .5;
-}
-.home-chip button:hover { opacity: 1; }
+/* Nav buttons */
+.wn{display:flex;gap:10px;margin-top:24px;padding-top:16px;border-top:1px solid var(--bdr)}
+.btn{padding:14px 28px;border-radius:var(--rs);border:0;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:.12s;white-space:nowrap}
+.btn:active{transform:scale(.96)}
+.bp{background:var(--pri);color:#fff;flex:1}.bp:hover{background:var(--pri-dk)}.bp:disabled{background:var(--bdr);color:var(--mut);cursor:not-allowed;transform:none}
+.bb{background:var(--card);color:var(--mut);border:1.5px solid var(--bdr)}.bb:hover{border-color:var(--mut)}
+.bc{background:var(--grn);color:#fff;flex:1;font-size:1rem;padding:16px 28px}.bc:hover{background:#3d7a4d}
+.bs{padding:10px 18px;font-size:.8rem}
+.bst{background:var(--staff);color:#fff}
+.bg{background:0;color:var(--mut);border:1.5px solid var(--bdr)}.bg:hover{border-color:var(--mut)}
+.ba{background:var(--adm);color:#fff}
+.bd{background:0;color:var(--red);border:1.5px solid var(--red-lt);padding:10px 18px;font-size:.8rem}
 
-/* Log list */
-.log-item {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 10px 0; border-bottom: 1px solid var(--border);
-}
-.log-item:last-child { border-bottom: none; }
-.log-date { font-weight: 600; font-size: .85rem; }
-.log-info { font-size: .72rem; color: var(--text-secondary); margin-top: 2px; }
-.log-actions { display: flex; gap: 4px; }
+/* Overlays */
+.ov{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.3);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
+.ov.show{display:flex}
+.os{background:var(--card);border-radius:20px 20px 0 0;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;padding:24px 20px calc(24px + var(--sb));animation:su .25s ease}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.os h2{font-family:'Fraunces',serif;font-size:1.2rem;margin-bottom:12px}
+.oc{float:right;width:32px;height:32px;border-radius:50%;background:var(--bg);border:0;cursor:pointer;font-size:1rem;color:var(--mut);display:flex;align-items:center;justify-content:center}
 
-/* ===== BOTTOM NAV ===== */
-.bottom-nav {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(255,255,255,.92);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border);
-  padding: 6px 0 calc(6px + var(--safe-bottom));
-}
-.bottom-nav-inner {
-  max-width: 480px; margin: 0 auto;
-  display: flex; justify-content: space-around;
-}
-.nav-item {
-  display: flex; flex-direction: column; align-items: center;
-  gap: 2px; padding: 6px 16px; border-radius: 10px;
-  border: none; background: transparent; cursor: pointer;
-  font-family: 'Outfit', sans-serif; transition: all .12s;
-}
-.nav-icon { font-size: 1.2rem; line-height: 1; }
-.nav-label { font-size: .62rem; font-weight: 600; letter-spacing: .3px; }
-.nav-item { color: var(--text-secondary); }
-.nav-item.active { color: var(--primary); }
-.nav-item[data-tab="staffPage"].active { color: var(--staff); }
-.nav-item[data-tab="adminPage"].active { color: var(--admin); }
-
-/* ===== OVERLAYS ===== */
-.overlay {
-  position: fixed; inset: 0; z-index: 200;
-  background: rgba(0,0,0,.3); backdrop-filter: blur(4px);
-  display: none; align-items: flex-end; justify-content: center;
-}
-.overlay.show { display: flex; }
-.overlay-sheet {
-  background: var(--card); border-radius: 20px 20px 0 0;
-  width: 100%; max-width: 700px; max-height: 85vh;
-  overflow-y: auto; padding: 24px 20px calc(20px + var(--safe-bottom));
-  animation: slideUp .25s ease;
-}
-@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.overlay-sheet h2 {
-  font-family: 'Fraunces', serif; font-size: 1.1rem;
-  color: var(--text); margin-bottom: 4px;
-}
-.overlay-subtitle {
-  font-size: .76rem; color: var(--text-secondary); margin-bottom: 14px;
-}
-.overlay-actions {
-  display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap;
-}
-.overlay-close {
-  position: absolute; top: 16px; right: 16px;
-  width: 32px; height: 32px; border-radius: 50%;
-  background: var(--bg); border: none; cursor: pointer;
-  font-size: 1rem; color: var(--text-secondary);
-  display: flex; align-items: center; justify-content: center;
-}
-
-/* Time out popup */
-.to-overlay { position: fixed; inset:0; z-index: 250; background: rgba(0,0,0,.4); display:none; align-items:center; justify-content:center; }
-.to-overlay.show { display:flex; }
-.to-box {
-  background: var(--card); border-radius: var(--radius); padding: 24px;
-  width: 320px; text-align: center; box-shadow: var(--shadow-lg);
-}
-.to-box h3 { font-size: .95rem; font-weight: 700; margin-bottom: 4px; }
-.to-box .to-sub { font-size: .82rem; color: var(--text-secondary); margin-bottom: 14px; }
-.to-box input[type="time"] {
-  width: 100%; padding: 12px; border: 2px solid var(--border);
-  border-radius: 10px; font-family: 'Outfit', sans-serif;
-  font-size: 1.1rem; text-align: center; margin-bottom: 14px;
-}
-.to-box input[type="time"]:focus { border-color: var(--primary); outline:none; }
-.to-btns { display: flex; gap: 8px; }
-.to-btns .btn { flex:1; }
-
-/* Confirm overlay */
-.confirm-overlay { position:fixed; inset:0; z-index:260; background:rgba(0,0,0,.4); display:none; align-items:center; justify-content:center; }
-.confirm-overlay.show { display:flex; }
-.confirm-box {
-  background: var(--card); border-radius: var(--radius); padding: 24px;
-  width: 380px; box-shadow: var(--shadow-lg);
-}
-.confirm-box h3 { font-size: .95rem; font-weight: 700; margin-bottom: 8px; color: var(--amber); }
-.confirm-item { padding: 6px 0; border-bottom: 1px solid var(--border); font-size: .82rem; display: flex; justify-content: space-between; }
-.confirm-btns { display: flex; gap: 8px; margin-top: 14px; }
-.confirm-btns .btn { flex: 1; }
-
-/* Table in overlays */
-.data-table { width: 100%; border-collapse: collapse; font-size: .76rem; margin: 8px 0; }
-.data-table th {
-  text-align: left; padding: 6px 8px; font-size: .64rem;
-  font-weight: 600; text-transform: uppercase; letter-spacing: .5px;
-  color: var(--text-secondary); border-bottom: 2px solid var(--border);
-}
-.data-table td { padding: 5px 8px; border-bottom: 1px solid var(--border); }
-.data-table tr:last-child td { border-bottom: none; }
-
-/* ===== TOAST ===== */
-.toast {
-  position: fixed; bottom: calc(80px + var(--safe-bottom));
-  left: 50%; transform: translateX(-50%) translateY(20px);
-  background: var(--text); color: #fff; padding: 10px 22px;
-  border-radius: 10px; font-size: .82rem; font-weight: 500;
-  opacity: 0; transition: all .25s; z-index: 500;
-  pointer-events: none; white-space: nowrap;
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ===== EMPTY STATE ===== */
-.empty-state {
-  text-align: center; padding: 40px 20px; color: var(--text-secondary);
-}
-.empty-state b { display: block; font-size: .9rem; color: var(--text); margin-bottom: 4px; }
-.empty-state span { font-size: .8rem; }
-
-/* Subtle entrance */
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-.p-card, .s-card { animation: fadeIn .2s ease both; }
+.as{background:var(--bg);border-radius:var(--rs);padding:16px;margin-bottom:12px}
+.as h3{font-size:.82rem;font-weight:700;color:var(--adm);margin-bottom:10px}
+.aa{display:flex;flex-wrap:wrap;gap:8px}
+.mr{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bdr);font-size:.82rem}.mr:last-child{border-bottom:0}
+.af{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.af input,.af select{padding:8px 12px;border:1.5px solid var(--bdr);border-radius:8px;font-family:'Outfit',sans-serif;font-size:.82rem;background:var(--card)}.af input:focus,.af select:focus{border-color:var(--adm);outline:0}
+.hchip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-size:.72rem;font-weight:500;background:var(--adm-lt);color:var(--adm);margin:0 4px 4px 0}
+.hchip button{background:0;border:0;cursor:pointer;color:var(--adm);font-size:.7rem;opacity:.5}.hchip button:hover{opacity:1}
+.li{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--bdr)}.li:last-child{border-bottom:0}
+.ld{font-weight:600;font-size:.85rem}.linf{font-size:.72rem;color:var(--mut);margin-top:2px}.la{display:flex;gap:4px}
+.pin{width:140px;text-align:center;padding:12px;border:2px solid var(--bdr);border-radius:10px;font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:600;letter-spacing:8px}.pin:focus{border-color:var(--adm);outline:0}
+.cf{background:var(--card);border-radius:var(--rs);padding:10px 14px;border:1.5px solid var(--bdr)}
+.cl{font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--mut);margin-bottom:3px}
+.ci{width:100%;border:0;outline:0;background:0;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:500;color:var(--txt)}
+.dt{width:100%;border-collapse:collapse;font-size:.76rem;margin:8px 0}
+.dt th{text-align:left;padding:6px 8px;font-size:.64rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);border-bottom:2px solid var(--bdr)}
+.dt td{padding:5px 8px;border-bottom:1px solid var(--bdr)}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--txt);color:#fff;padding:12px 24px;border-radius:12px;font-size:.88rem;font-weight:600;opacity:0;transition:.25s;z-index:500;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-
-<!-- TOP BAR -->
-<div class="topbar">
-  <div class="topbar-inner">
-    <div class="topbar-left">
-      <div>
-        <div class="topbar-title">Pathways</div>
-        <div class="topbar-version">v3.0</div>
-      </div>
-      <select class="loc-select" id="locSelect" onchange="switchLoc(this.value)"></select>
-    </div>
-    <div class="topbar-right">
-      <span class="sync-indicator" id="syncStatus"><span class="sync-dot"></span> Synced</span>
-      <span class="clock" id="liveClock"></span>
-    </div>
-  </div>
+<div class="lb" id="locBar"></div>
+<div class="hd"><div class="hd-i"><div style="display:flex;align-items:baseline;gap:10px"><span class="hd-t" id="hdT">Pathways</span><span style="font-size:.72rem;color:var(--mut)">v3.0</span></div><div class="hd-r"><span class="hd-s" id="sync"><span class="sd"></span> Synced</span><span class="hd-c" id="clock"></span><button class="gear" onclick="openAdmin()">⚙️</button></div></div></div>
+<div class="mn">
+<div class="dr"><label>Date</label><input type="date" id="logDate"></div>
+<div class="sb" id="stepBar"></div>
+<div class="ws on" id="s1"><div class="wt">Where are you going?</div><div class="wst">Tap the homes you're visiting</div><div class="hg" id="homeGrid"></div><div class="wn"><button class="btn bp" id="s1n" onclick="goStep(2)" disabled>Next →</button></div></div>
+<div class="ws" id="s2"><div class="wt">Who's here?</div><div class="wst">Tap to select people</div><div id="pplList"></div><div class="wn"><button class="btn bb" onclick="goStep(1)">← Back</button><button class="btn bp" id="s2n" onclick="goStep(3)" disabled>Next →</button></div></div>
+<div class="ws" id="s3"><div class="wt">Who's driving?</div><div class="wst">Select or add a driver</div><div style="display:flex;gap:8px;margin-bottom:14px"><input type="text" class="si" id="newDrv" placeholder="Add new driver..."><button class="btn bp bs" onclick="addDrv()">Add</button></div><div id="drvList"></div><div class="wn"><button class="btn bb" onclick="goStep(2)">← Back</button><button class="btn bp" id="s3n" onclick="goStep(4)" disabled>Next →</button></div></div>
+<div class="ws" id="s4"><div class="wt">Check In or Out?</div><div class="wst">Set the action and time</div><div class="at"><button class="ao ai" id="optIn" onclick="setAct('in')">☀️ Arriving</button><button class="ao" id="optOut" onclick="setAct('out')">🌙 Departing</button></div><div class="td"><input type="time" id="wTime"><div class="tl">Tap to adjust</div></div><div class="cs" id="cSum"></div><div class="wn"><button class="btn bb" onclick="goStep(3)">← Back</button><button class="btn bc" onclick="doConfirm()">✓ Confirm</button></div></div>
 </div>
 
-<!-- CONTROLS -->
-<div class="controls" id="controlsBar">
-  <div class="ctrl-field">
-    <div class="ctrl-label">Driver</div>
-    <input class="ctrl-input" type="text" id="driverName" placeholder="Enter driver name" autocomplete="off">
-  </div>
-  <div class="ctrl-field">
-    <div class="ctrl-label">Date</div>
-    <input class="ctrl-input" type="date" id="logDate">
-  </div>
-</div>
+<!-- Admin overlay -->
+<div class="ov" id="admOv" onclick="if(event.target===this)clAdm()"><div class="os" onclick="event.stopPropagation()"><button class="oc" onclick="clAdm()">✕</button>
+<div id="admLock" style="text-align:center;padding:40px 0"><h2 style="font-family:'Fraunces',serif;color:var(--adm)">Admin Access</h2><p style="color:var(--mut);margin:6px 0 16px;font-size:.85rem">Enter PIN</p><input type="password" class="pin" id="pinIn" maxlength="4" placeholder="····" inputmode="numeric"><br><button class="btn ba" onclick="doUnlock()" style="margin-top:12px">Unlock</button><p style="font-size:.68rem;color:var(--mut);margin-top:14px">Default: 1234</p></div>
+<div id="admD" style="display:none"><h2>Admin</h2>
+<div class="as"><h3>Quick Actions</h3><div class="aa"><button class="btn ba bs" onclick="saveDay()">💾 Save Log</button><button class="btn bp bs" onclick="rptToday()">📄 Report</button><button class="btn bg bs" onclick="showSum()">📊 Summary</button><button class="btn bg bs" onclick="expCSV()">Export CSV</button><button class="btn bd" onclick="clrToday()">Clear Today</button></div></div>
+<div class="as"><h3>Manage Individuals — <span id="manLoc"></span></h3><div class="af"><input type="text" id="addNm" placeholder="Full Name" style="flex:2"><input type="text" id="addHm" placeholder="Home" style="flex:1"><select id="addAai"><option value="A">A</option><option value="B">B</option><option value="C" selected>C</option><option value="1:1">1:1</option></select><button class="btn ba bs" onclick="addInd()">Add</button></div><div style="margin-bottom:8px" id="hChips"></div><div id="manList"></div><div style="font-size:.72rem;color:var(--mut);margin-top:8px" id="manCt"></div></div>
+<div class="as"><h3>Saved Logs — <span id="logLoc"></span></h3><div id="logList"><p style="color:var(--mut);font-size:.82rem">No saved logs.</p></div></div>
+<div class="as"><h3>Settings</h3><div style="display:flex;gap:10px;flex-wrap:wrap"><div class="cf" style="flex:1"><div class="cl">Admin Email</div><input class="ci" type="email" id="admEmail" placeholder="your@email.com"></div><div class="cf" style="flex:1"><div class="cl">Change PIN</div><div style="display:flex;gap:6px"><input class="ci" type="password" id="newPin" placeholder="4-digit" maxlength="4" inputmode="numeric"><button class="btn ba bs" onclick="doSetPin()">Set</button></div></div></div></div>
+</div></div></div>
 
-<!-- MAIN CONTENT -->
-<div class="main">
+<!-- Summary overlay -->
+<div class="ov" id="sumOv" onclick="if(event.target===this)X('sumOv')"><div class="os" onclick="event.stopPropagation()"><button class="oc" onclick="X('sumOv')">✕</button><h2>Daily Summary</h2><div style="font-size:.78rem;color:var(--mut);margin-bottom:12px" id="sumSub"></div><div class="cl">Participants</div><table class="dt"><thead><tr><th>Name</th><th>Home</th><th>In</th><th>Out</th><th>Driver</th></tr></thead><tbody id="sumPB"></tbody></table><div class="cl" style="margin-top:12px">Staff</div><table class="dt"><thead><tr><th>Name</th><th>House</th><th>In</th><th>Out</th></tr></thead><tbody id="sumSB"></tbody></table><div style="display:flex;gap:8px;margin-top:14px"><button class="btn bp bs" onclick="cpTxt()">Copy Text</button><button class="btn bg bs" onclick="cpCSV()">Copy CSV</button><button class="btn bg bs" onclick="X('sumOv')">Close</button></div></div></div>
 
-  <!-- PARTICIPANTS PAGE -->
-  <div class="page active" id="pPage">
-    <!-- Quick Group Entry -->
-    <div class="qge" id="qgePanel">
-      <div class="qge-header" onclick="toggleQGE()">
-        <span class="qge-title">⚡ Quick Group Entry</span>
-        <span class="qge-toggle">▼</span>
-      </div>
-      <div class="qge-body">
-        <div class="qge-row">
-          <select class="qge-select" id="qgeSelect"><option value="">— Choose participant —</option></select>
-          <button class="btn btn-primary btn-sm" onclick="qgeAdd()">+ Add</button>
-        </div>
-        <div class="qge-chips" id="qgeChips"></div>
-        <div class="qge-times">
-          <div>
-            <div class="ctrl-label">Time In</div>
-            <input type="time" class="p-time-input" id="qgeTimeIn" style="width:100%">
-          </div>
-          <div>
-            <div class="ctrl-label">Time Out</div>
-            <input type="time" class="p-time-input" id="qgeTimeOut" style="width:100%">
-          </div>
-          <button class="btn btn-primary" id="qgeLogBtn" onclick="qgeLogTimes()" disabled>Log</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-head">
-      <span class="section-title">Participants</span>
-      <span class="section-count" id="pCount">0 / 0</span>
-    </div>
-    <div class="filter-row" id="filterRow"></div>
-    <div class="p-grid" id="pList"></div>
-    <div class="empty-state" id="pEmpty" style="display:none">
-      <b>No participants yet</b>
-      <span>Go to Admin → Manage Individuals to add people</span>
-    </div>
-  </div>
-
-  <!-- STAFF PAGE -->
-  <div class="page" id="staffPage">
-    <div class="section-head">
-      <span class="section-title">Staff Sign-In</span>
-      <span class="section-count staff-count" id="sCount">0 staff</span>
-    </div>
-    <div style="margin-bottom:12px">
-      <button class="btn btn-staff" onclick="addStaff()">+ Add Staff Member</button>
-    </div>
-    <div id="sList"></div>
-  </div>
-
-  <!-- ADMIN PAGE -->
-  <div class="page" id="adminPage">
-    <div class="admin-lock" id="aLock">
-      <h2>Admin Access</h2>
-      <p>Enter your PIN to manage logs and settings</p>
-      <input type="password" class="pin-input" id="pinIn" maxlength="4" placeholder="····" inputmode="numeric">
-      <br><button class="btn btn-admin" onclick="unlock()" style="margin-top:12px">Unlock</button>
-      <p style="font-size:.68rem;color:var(--text-secondary);margin-top:14px">Default PIN: 1234</p>
-    </div>
-    <div class="admin-dash" id="aDash">
-      <div class="admin-section">
-        <h3>Quick Actions</h3>
-        <div class="admin-actions">
-          <button class="btn btn-admin" onclick="saveDay()">💾 Save Today's Log</button>
-          <button class="btn btn-primary" onclick="reportToday()">📄 Generate Report</button>
-          <button class="btn btn-ghost" onclick="exportAllCSV()">📊 Export All CSV</button>
-          <button class="btn btn-danger btn-sm" onclick="clearToday()">Clear Today</button>
-        </div>
-      </div>
-      <div class="admin-section">
-        <h3>Manage Individuals — <span id="manLoc"></span></h3>
-        <div class="add-form">
-          <input type="text" id="addName" placeholder="Full Name" style="flex:2">
-          <input type="text" id="addHome" placeholder="Home" style="flex:1">
-          <select id="addAAI"><option value="A">A</option><option value="B">B</option><option value="C" selected>C</option><option value="1:1">1:1</option></select>
-          <button class="btn btn-admin btn-sm" onclick="addInd()">Add</button>
-        </div>
-        <div style="margin-bottom:10px" id="homeChips"></div>
-        <div id="manList"></div>
-        <div style="font-size:.72rem;color:var(--text-secondary);margin-top:8px" id="manCt"></div>
-      </div>
-      <div class="admin-section">
-        <h3>Saved Logs — <span id="logLoc"></span></h3>
-        <div id="logList"><p style="color:var(--text-secondary);font-size:.82rem">No saved logs yet.</p></div>
-      </div>
-      <div class="admin-section">
-        <h3>Settings</h3>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <div class="ctrl-field" style="flex:1">
-            <div class="ctrl-label">Admin Email</div>
-            <input class="ctrl-input" type="email" id="admEmail" placeholder="your@email.com">
-          </div>
-          <div class="ctrl-field" style="flex:1">
-            <div class="ctrl-label">Change PIN</div>
-            <div style="display:flex;gap:6px">
-              <input class="ctrl-input" type="password" id="newPin" placeholder="4-digit" maxlength="4" inputmode="numeric">
-              <button class="btn btn-admin btn-sm" onclick="setPin()">Set</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- BOTTOM NAV -->
-<div class="bottom-nav">
-  <div class="bottom-nav-inner">
-    <button class="nav-item active" data-tab="pPage" onclick="goPage('pPage')">
-      <span class="nav-icon">👥</span>
-      <span class="nav-label">Participants</span>
-    </button>
-    <button class="nav-item" data-tab="staffPage" onclick="goPage('staffPage')">
-      <span class="nav-icon">📋</span>
-      <span class="nav-label">Staff</span>
-    </button>
-    <button class="nav-item" onclick="showSum()">
-      <span class="nav-icon">📊</span>
-      <span class="nav-label">Summary</span>
-    </button>
-    <button class="nav-item" data-tab="adminPage" onclick="goPage('adminPage')">
-      <span class="nav-icon">⚙️</span>
-      <span class="nav-label">Admin</span>
-    </button>
-  </div>
-</div>
-
-<!-- SUMMARY OVERLAY -->
-<div class="overlay" id="sumOv" onclick="if(event.target===this)clOv('sumOv')">
-  <div class="overlay-sheet" onclick="event.stopPropagation()">
-    <h2>Daily Summary</h2>
-    <div class="overlay-subtitle" id="sumSub"></div>
-    <div class="ctrl-label" style="margin-top:8px">Participants</div>
-    <table class="data-table"><thead><tr><th>Name</th><th>Home</th><th>AAI</th><th>In</th><th>Out</th><th>Driver</th></tr></thead><tbody id="sumPB"></tbody></table>
-    <div class="ctrl-label" style="margin-top:12px">Staff</div>
-    <table class="data-table"><thead><tr><th>Name</th><th>House</th><th>In</th><th>Out</th></tr></thead><tbody id="sumSB"></tbody></table>
-    <div class="overlay-actions">
-      <button class="btn btn-primary" onclick="cpTxt()">Copy Text</button>
-      <button class="btn btn-ghost" onclick="cpCSV()">Copy CSV</button>
-      <button class="btn btn-ghost" onclick="clOv('sumOv')">Close</button>
-    </div>
-  </div>
-</div>
-
-<!-- VIEW LOG OVERLAY -->
-<div class="overlay" id="vOv" onclick="if(event.target===this)clOv('vOv')">
-  <div class="overlay-sheet" onclick="event.stopPropagation()">
-    <h2 id="vT">Log</h2>
-    <div class="overlay-subtitle" id="vS"></div>
-    <div id="vC"></div>
-    <div class="overlay-actions">
-      <button class="btn btn-primary" onclick="reportViewed()">Generate Report</button>
-      <button class="btn btn-ghost" onclick="cpViewCSV()">Copy CSV</button>
-      <button class="btn btn-ghost" onclick="clOv('vOv')">Close</button>
-    </div>
-  </div>
-</div>
-
-<!-- TIME OUT POPUP -->
-<div class="to-overlay" id="toOverlay" onclick="if(event.target===this)closeTO()">
-  <div class="to-box">
-    <h3 id="toTitle">Add Out Time</h3>
-    <div class="to-sub" id="toSub"></div>
-    <input type="time" id="toTimeInput">
-    <div class="to-btns">
-      <button class="btn btn-primary" onclick="confirmTO()">Confirm</button>
-      <button class="btn btn-ghost" onclick="closeTO()">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- MISSING OUT TIME CONFIRM -->
-<div class="confirm-overlay" id="confirmOv" onclick="if(event.target===this)closeConfirm()">
-  <div class="confirm-box">
-    <h3>Missing Out Times</h3>
-    <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:10px">These participants signed in but don't have out times:</p>
-    <div id="confirmList"></div>
-    <div class="confirm-btns">
-      <button class="btn btn-primary" onclick="confirmSaveAnyway()">Save Anyway</button>
-      <button class="btn btn-ghost" onclick="closeConfirm()">Go Back</button>
-    </div>
-  </div>
-</div>
+<!-- View log overlay -->
+<div class="ov" id="vOv" onclick="if(event.target===this)X('vOv')"><div class="os" onclick="event.stopPropagation()"><button class="oc" onclick="X('vOv')">✕</button><h2 id="vT">Log</h2><div style="font-size:.78rem;color:var(--mut);margin-bottom:12px" id="vS"></div><div id="vC"></div><div style="display:flex;gap:8px;margin-top:14px"><button class="btn bp bs" onclick="rptView()">Report</button><button class="btn bg bs" onclick="cpVCSV()">Copy CSV</button><button class="btn bg bs" onclick="X('vOv')">Close</button></div></div></div>
 
 <div class="toast" id="toast"></div>
-
 <script>
-// ================================================================
-// LOGO (base64)
-// ================================================================
-const OLW_LOGO = document.querySelector('.topbar img')?.src || '';
+// === CONFIG ===
+const LOCS=[{id:'westlake',name:'Pathways Westlake',short:'Westlake'},{id:'avon',name:'Pathways Avon',short:'Avon'},{id:'mentor',name:'Pathways Mentor',short:'Mentor'},{id:'valleyview',name:'Pathways Valley View',short:'Valley View'},{id:'garfield',name:'Pathways Garfield',short:'Garfield'}];
+const DEF={westlake:[{name:"Michael Rooney",home:"Columbia II",aai:"B"},{name:"Warren Benzing",home:"Manning",aai:"B"},{name:"Charles Biggs",home:"Manning",aai:"C"},{name:"Michael O'Shea",home:"Manning",aai:"1:1"},{name:"Theodore Scafe",home:"Manning",aai:"C"},{name:"Michelle Perkins",home:"Myrtle",aai:"C"},{name:"Elizabeth Schneider",home:"Myrtle",aai:"B"},{name:"Karen Luber",home:"Myrtle",aai:"A"},{name:"John See",home:"Tauton",aai:"C"},{name:"Tommy Tvrdik",home:"Tauton",aai:"B"},{name:"Jeff Bayus",home:"Walker",aai:"B"},{name:"Margaret Corrigan",home:"Walker",aai:"C"},{name:"Christopher Jones",home:"Walker",aai:"C"},{name:"Mark Adkinson",home:"Bay Village",aai:"A"},{name:"Carlos Martinez",home:"Bay Village",aai:"A"},{name:"Aljeana Pugh",home:"Brady",aai:"B"},{name:"Robin Pettway",home:"Brady",aai:"B"},{name:"Michelle Kostya",home:"Brady",aai:"C"},{name:"Matthew Mattei",home:"Jeanne Drive",aai:"1:1"},{name:"Harvey Graham",home:"Delaware",aai:"A"},{name:"Andrew Brown",home:"Delaware",aai:"C"},{name:"Marion Wilson (Beth)",home:"Delaware",aai:"C"},{name:"Kara Smigel",home:"Delaware",aai:"B"},{name:"Lisa St. Clair",home:"Beeler",aai:"C"},{name:"Molly Orahood",home:"Beeler",aai:"C"},{name:"Scott Pennington",home:"Beeler",aai:"C"},{name:"Christopher Tillman",home:"Beeler",aai:"A"},{name:"Ryan Borgquist",home:"Oakview",aai:"B"},{name:"Joseph Case",home:"Westlake",aai:"B"},{name:"Zach Evans",home:"Westlake",aai:"A"},{name:"Andrew Prihoda",home:"Southlake",aai:"A"},{name:"Melissa Skidmore",home:"Southlake",aai:""},{name:"Beverly Landers",home:"Westlawn",aai:"C"},{name:"Mi Yup Kim",home:"Westlawn",aai:"C"},{name:"Timothy Sokol",home:"Hilton",aai:"B"},{name:"Matthew Mishik",home:"NMT Carmen",aai:"A"},{name:"Malek Wahdan",home:"NMT Carmen",aai:"C"},{name:"Max Smith",home:"NMT Bob",aai:"A"},{name:"John Kelley (Jack)",home:"NMT Emily",aai:"B"},{name:"Miracle Bosque",home:"NMT Booker",aai:"C"},{name:"Holly Thomas",home:"Community",aai:"B"},{name:"Alyssa Maraldo",home:"Community",aai:"C"},{name:"Matthew Maraldo",home:"Community",aai:"C"},{name:"John McBride (Jack)",home:"Community",aai:"C"},{name:"Jake Blood",home:"Community",aai:"C"},{name:"Antonio DeAngelis",home:"Community",aai:"C"},{name:"Dominic DeAngelis",home:"Community",aai:"B"}],avon:[],mentor:[],valleyview:[],garfield:[]};
 
-// ================================================================
-// LOCATIONS & DEFAULTS
-// ================================================================
-const LOCS = [
-  {id:'westlake', name:'Pathways Westlake', short:'Westlake'},
-  {id:'avon', name:'Pathways Avon', short:'Avon'},
-  {id:'mentor', name:'Pathways Mentor', short:'Mentor'},
-  {id:'valleyview', name:'Pathways Valley View', short:'Valley View'},
-  {id:'garfield', name:'Pathways Garfield', short:'Garfield'}
-];
+// === STATE ===
+let loc='westlake',ind={},pt={},sr={},sic={},drv={},step=1,selH=new Set(),selP=new Set(),selS=new Set(),selD=null,act='in',vk=null,admOK=false;
 
-const DEFAULTS = {
-  westlake:[
-    {name:"Michael Rooney",home:"Columbia II",aai:"B"},{name:"Warren Benzing",home:"Manning",aai:"B"},
-    {name:"Charles Biggs",home:"Manning",aai:"C"},{name:"Michael O'Shea",home:"Manning",aai:"1:1"},
-    {name:"Theodore Scafe",home:"Manning",aai:"C"},{name:"Michelle Perkins",home:"Myrtle",aai:"C"},
-    {name:"Elizabeth Schneider",home:"Myrtle",aai:"B"},{name:"Karen Luber",home:"Myrtle",aai:"A"},
-    {name:"John See",home:"Tauton",aai:"C"},{name:"Tommy Tvrdik",home:"Tauton",aai:"B"},
-    {name:"Jeff Bayus",home:"Walker",aai:"B"},{name:"Margaret Corrigan",home:"Walker",aai:"C"},
-    {name:"Christopher Jones",home:"Walker",aai:"C"},{name:"Mark Adkinson",home:"Bay Village",aai:"A"},
-    {name:"Carlos Martinez",home:"Bay Village",aai:"A"},{name:"Aljeana Pugh",home:"Brady",aai:"B"},
-    {name:"Robin Pettway",home:"Brady",aai:"B"},{name:"Michelle Kostya",home:"Brady",aai:"C"},
-    {name:"Matthew Mattei",home:"Jeanne Drive",aai:"1:1"},{name:"Harvey Graham",home:"Delaware",aai:"A"},
-    {name:"Andrew Brown",home:"Delaware",aai:"C"},{name:"Marion Wilson (Beth)",home:"Delaware",aai:"C"},
-    {name:"Kara Smigel",home:"Delaware",aai:"B"},{name:"Lisa St. Clair",home:"Beeler",aai:"C"},
-    {name:"Molly Orahood",home:"Beeler",aai:"C"},{name:"Scott Pennington",home:"Beeler",aai:"C"},
-    {name:"Christopher Tillman",home:"Beeler",aai:"A"},{name:"Ryan Borgquist",home:"Oakview",aai:"B"},
-    {name:"Joseph Case",home:"Westlake",aai:"B"},{name:"Zach Evans",home:"Westlake",aai:"A"},
-    {name:"Andrew Prihoda",home:"Southlake",aai:"A"},{name:"Melissa Skidmore",home:"Southlake",aai:""},
-    {name:"Beverly Landers",home:"Westlawn",aai:"C"},{name:"Mi Yup Kim",home:"Westlawn",aai:"C"},
-    {name:"Timothy Sokol",home:"Hilton",aai:"B"},{name:"Matthew Mishik",home:"NMT Carmen",aai:"A"},
-    {name:"Malek Wahdan",home:"NMT Carmen",aai:"C"},{name:"Max Smith",home:"NMT Bob",aai:"A"},
-    {name:"John Kelley (Jack)",home:"NMT Emily",aai:"B"},{name:"Miracle Bosque",home:"NMT Booker",aai:"C"},
-    {name:"Holly Thomas",home:"Community",aai:"B"},{name:"Alyssa Maraldo",home:"Community",aai:"C"},
-    {name:"Matthew Maraldo",home:"Community",aai:"C"},{name:"John McBride (Jack)",home:"Community",aai:"C"},
-    {name:"Jake Blood",home:"Community",aai:"C"},{name:"Antonio DeAngelis",home:"Community",aai:"C"},
-    {name:"Dominic DeAngelis",home:"Community",aai:"B"}
-  ],
-  avon:[], mentor:[], valleyview:[], garfield:[]
-};
+// === FIREBASE ===
+firebase.initializeApp({apiKey:"AIzaSyBECetbt2icDfBu7mWU8RjpLUAEt6SYgrU",authDomain:"pathways-attendance.firebaseapp.com",projectId:"pathways-attendance",storageBucket:"pathways-attendance.firebasestorage.app",messagingSenderId:"432399934087",appId:"1:432399934087:web:6cc6b7abe21647cea0ce22"});
+const db=firebase.firestore();db.enablePersistence({synchronizeTabs:true}).catch(()=>{});
+async function D(s,k,v){await db.collection(s).doc(k).set(JSON.parse(JSON.stringify(v)))}
+async function G(s,k){try{const d=await db.collection(s).doc(k).get();return d.exists?d.data():undefined}catch(e){return undefined}}
+async function A(s){const snap=await db.collection(s).get();return snap.docs.map(d=>({key:d.id,value:d.data()}))}
+async function R(s,k){await db.collection(s).doc(k).delete()}
 
-// ================================================================
-// STATE
-// ================================================================
-let curLoc = 'westlake';
-let individuals = {};
-let pTimes = {};
-let sRows = {};
-let sIdC = {};
-let activeHome = 'ALL';
-let vKey = null;
-let qgeSel = new Set();
-let pendingTO = null;
-
-// ================================================================
-// FIREBASE
-// ================================================================
-firebase.initializeApp({
-  apiKey: "AIzaSyBECetbt2icDfBu7mWU8RjpLUAEt6SYgrU",
-  authDomain: "pathways-attendance.firebaseapp.com",
-  projectId: "pathways-attendance",
-  storageBucket: "pathways-attendance.firebasestorage.app",
-  messagingSenderId: "432399934087",
-  appId: "1:432399934087:web:6cc6b7abe21647cea0ce22"
-});
-const db = firebase.firestore();
-db.enablePersistence({ synchronizeTabs: true }).catch(err => {
-  console.warn('Firestore persistence unavailable:', err.code);
-});
-
-// ================================================================
-// DB HELPERS
-// ================================================================
-async function dbPut(store,key,val){await db.collection(store).doc(key).set(JSON.parse(JSON.stringify(val)))}
-async function dbGet(store,key){try{const doc=await db.collection(store).doc(key).get();return doc.exists?doc.data():undefined}catch(e){return undefined}}
-async function dbAll(store){const snapshot=await db.collection(store).get();return snapshot.docs.map(doc=>({key:doc.id,value:doc.data()}))}
-async function dbDel(store,key){await db.collection(store).doc(key).delete()}
-
-// ================================================================
-// HELPERS
-// ================================================================
+// === HELPERS ===
 const $=id=>document.getElementById(id);
 function f12(t){if(!t)return'—';const[h,m]=t.split(':').map(Number);return`${h%12||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`}
-function fD(d){if(!d)return'—';const[y,mo,dy]=d.split('-');const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${months[parseInt(mo)-1]} ${parseInt(dy)}, ${y}`}
-function clOv(id){$(id).classList.remove('show')}
-function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
-function dlFile(content,name,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a)}
-function curP(){return individuals[curLoc]||[]}
-function curHomes(){return[...new Set(curP().map(p=>p.home))].sort()}
-function locName(){return LOCS.find(l=>l.id===curLoc).name}
-function locShort(){return LOCS.find(l=>l.id===curLoc).short}
-function nowTime(){const n=new Date();return`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`}
-function isAdminOpen(){return $('aDash').classList.contains('unlocked')}
-function todayISO(){const n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0')}
+function fD(d){if(!d)return'—';const[y,mo,dy]=d.split('-');return['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(mo)-1]+' '+parseInt(dy)+', '+y}
+function X(id){$(id).classList.remove('show')}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function dl(c,n,t){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:t}));a.download=n;document.body.appendChild(a);a.click();document.body.removeChild(a)}
+function cP(){return ind[loc]||[]}
+function cH(){return[...new Set(cP().map(p=>p.home))].sort()}
+function lN(){return LOCS.find(l=>l.id===loc).name}
+function lS(){return LOCS.find(l=>l.id===loc).short}
+function now(){const n=new Date();return`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`}
+function today(){const n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0')}
 
-// ================================================================
-// LOCATION SWITCHING
-// ================================================================
-function buildLocSelect(){
-  const sel=$('locSelect');sel.innerHTML='';
-  LOCS.forEach(l=>{const o=document.createElement('option');o.value=l.id;o.textContent=l.short;if(l.id===curLoc)o.selected=true;sel.appendChild(o)});
-}
-function switchLoc(id){
-  curLoc=id;activeHome='ALL';qgeSel.clear();
-  buildLocSelect();rebuildAll();
-  if(isAdminOpen()){$('manLoc').textContent=locShort();$('logLoc').textContent=locShort();renderManage();loadLogs()}
-}
-function rebuildAll(){buildFilterRow();renderP();renderS();buildQGESelect()}
+// === LOC BAR ===
+function bLB(){const el=$('locBar');el.innerHTML='';LOCS.forEach(l=>{const b=document.createElement('button');b.className=l.id===loc?'on':'';b.textContent=l.short;b.onclick=()=>{loc=l.id;bLB();reset();$('hdT').textContent=lS();if(admOK){$('manLoc').textContent=lS();$('logLoc').textContent=lS();rMng();lLogs()}};el.appendChild(b)})}
 
-// ================================================================
-// AUTO-SAVE
-// ================================================================
-let svTimer=null;
-let suppressRemote=false;
-function scheduleSave(){clearTimeout(svTimer);svTimer=setTimeout(async()=>{suppressRemote=true;
-  const dt=$('logDate').value;
-  const state={_driver:$('driverName').value,_date:dt};
-  LOCS.forEach(l=>{state[l.id]={pTimes:pTimes[l.id]||{},sRows:sRows[l.id]||[],sIdC:sIdC[l.id]||1}});
-  await dbPut('state','current',{_date:dt});
-  await dbPut('state','day_'+dt,state);
-  $('syncStatus').innerHTML='<span class="sync-dot"></span> Saved '+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
-  setTimeout(()=>{suppressRemote=false},1000)},800)}
+// === WIZARD ===
+function goStep(n){step=n;document.querySelectorAll('.ws').forEach(s=>s.classList.remove('on'));$('s'+n).classList.add('on');bSB();if(n===1)rHomes();if(n===2)rPpl();if(n===3)rDrv();if(n===4){$('wTime').value=now();rCS()}}
+function bSB(){const b=$('stepBar');b.innerHTML='';for(let i=1;i<=4;i++){const d=document.createElement('span');d.className='sbd'+(i===step?' now':i<step?' ok':'');d.textContent=i;b.appendChild(d);if(i<4){const l=document.createElement('span');l.className='sbl'+(i<step?' ok':'');b.appendChild(l)}}}
+function reset(){selH.clear();selP.clear();selS.clear();selD=null;act='in';goStep(1)}
 
-async function restoreState(){
-  const cur=await dbGet('state','current');
-  let dt=(cur&&cur._date)||'';
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(dt))dt=todayISO();
-  $('logDate').value=dt;
-  await loadDateState(dt);
-}
+// Step 1: Homes
+function rHomes(){const g=$('homeGrid');g.innerHTML='';const pp=cP(),t=pt[loc]||{};cH().forEach(h=>{const cnt=pp.filter(p=>p.home===h).length;const inCnt=pp.filter((p,i)=>p.home===h&&t[i]&&t[i].signedIn).length;const c=document.createElement('div');c.className='hc'+(selH.has(h)?' sel':'');c.innerHTML=`<div class="hi">🏠</div><div class="hn">${h}</div><div class="hcn">${cnt} people${inCnt?' · '+inCnt+' in':''}</div>`;c.onclick=()=>{selH.has(h)?selH.delete(h):selH.add(h);rHomes()};g.appendChild(c)});const sc=document.createElement('div');sc.className='hc stf'+(selH.has('_S')?' sel':'');sc.innerHTML=`<div class="hi">📋</div><div class="hn">Staff Sign-In</div><div class="hcn">${(sr[loc]||[]).filter(r=>r.name).length} staff</div>`;sc.onclick=()=>{selH.has('_S')?selH.delete('_S'):selH.add('_S');rHomes()};g.appendChild(sc);$('s1n').disabled=selH.size===0}
 
-async function loadDateState(dt){
-  let s=await dbGet('state','day_'+dt);
-  if(!s){const old=await dbGet('state','current');if(old&&old._driver!==undefined&&old._date===dt){s=old;await dbPut('state','day_'+dt,old)}}
-  if(!s){
-    $('driverName').value='';
-    LOCS.forEach(l=>{pTimes[l.id]={};(individuals[l.id]||[]).forEach((_,i)=>{pTimes[l.id][i]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false}});sRows[l.id]=[];sIdC[l.id]=1});
-    return;
-  }
-  if(s._driver!==undefined)$('driverName').value=s._driver||'';
-  LOCS.forEach(l=>{
-    pTimes[l.id]={};(individuals[l.id]||[]).forEach((_,i)=>{pTimes[l.id][i]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false}});
-    sRows[l.id]=[];sIdC[l.id]=1;
-    if(s[l.id]){
-      const saved=s[l.id];
-      if(saved.pTimes){Object.keys(saved.pTimes).forEach(k=>{const pt=saved.pTimes[k];if(pt.signedIn===undefined){pt.signedIn=!!(pt.timeIn);pt.fullyLocked=!!(pt.locked);delete pt.locked}pTimes[l.id][k]=pt})}
-      if(saved.sRows){sRows[l.id]=saved.sRows;sRows[l.id].forEach(r=>{if(r.signedIn===undefined){r.signedIn=!!(r.timeIn);r.fullyLocked=!!(r.locked);delete r.locked;if(r.lastName){r.name=(r.name+' '+(r.lastName||'')).trim();delete r.lastName}}})}
-      if(saved.sIdC)sIdC[l.id]=saved.sIdC;
-    }
-  });
-}
+// Step 2: People
+function rPpl(){const el=$('pplList');el.innerHTML='';const pp=cP(),t=pt[loc]||{};[...selH].filter(h=>h!=='_S').forEach(home=>{const sec=document.createElement('div');sec.className='ps';const ppl=pp.map((p,i)=>({...p,idx:i})).filter(p=>p.home===home);const allSel=ppl.every(p=>selP.has(p.idx));sec.innerHTML=`<div class="psh"><span class="pst">${home} (${ppl.length})</span><button class="psa">${allSel?'Deselect All':'Select All'}</button></div>`;sec.querySelector('.psa').onclick=()=>{allSel?ppl.forEach(p=>selP.delete(p.idx)):ppl.forEach(p=>selP.add(p.idx));rPpl()};ppl.forEach(p=>{const s=t[p.idx]||{};const c=document.createElement('div');c.className='pc'+(selP.has(p.idx)?' sel':'');let st='';if(s.fullyLocked)st='<span class="ps-s ps-lk">✓ Done</span>';else if(s.signedIn)st='<span class="ps-s ps-in">⏱ In</span>';c.innerHTML=`<span class="ck">${selP.has(p.idx)?'✓':''}</span><div class="pi"><div class="pn">${p.name}</div><div class="pm">AAI: ${p.aai||'—'}${s.signedIn?' · In: '+f12(s.timeIn):''}</div></div>${st}`;c.onclick=()=>{selP.has(p.idx)?selP.delete(p.idx):selP.add(p.idx);rPpl()};sec.appendChild(c)});el.appendChild(sec)});if(selH.has('_S')){const sec=document.createElement('div');sec.className='ps';sec.innerHTML=`<div class="psh"><span class="pst">Staff</span></div>`;const ar=document.createElement('div');ar.className='sa';ar.innerHTML=`<input type="text" class="si" id="sNmIn" placeholder="Enter staff name..."><button class="btn bst bs" onclick="addStW()">+ Add</button>`;sec.appendChild(ar);(sr[loc]||[]).forEach((r,i)=>{if(!r.name)return;const c=document.createElement('div');c.className='pc'+(selS.has(i)?' sel':'');let st='';if(r.fullyLocked)st='<span class="ps-s ps-lk">✓ Done</span>';else if(r.signedIn)st='<span class="ps-s ps-in">⏱ In</span>';c.innerHTML=`<span class="ck">${selS.has(i)?'✓':''}</span><div class="pi"><div class="pn">${r.name}</div><div class="pm">${r.home||'—'}</div></div>${st}`;c.onclick=()=>{selS.has(i)?selS.delete(i):selS.add(i);rPpl()};sec.appendChild(c)});el.appendChild(sec)}$('s2n').disabled=selP.size===0&&selS.size===0}
+function addStW(){const inp=$('sNmIn');const nm=inp.value.trim();if(!nm)return;if(!sr[loc])sr[loc]=[];if(!sic[loc])sic[loc]=1;sr[loc].push({id:sic[loc]++,name:nm,home:'',timeIn:'',timeOut:'',signedIn:false,fullyLocked:false});selS.add(sr[loc].length-1);inp.value='';schSave();rPpl()}
 
-// ================================================================
-// INDIVIDUALS PERSISTENCE
-// ================================================================
-async function loadIndividuals(){for(const l of LOCS){const saved=await dbGet('individuals',l.id);const list=saved&&saved.list?saved.list:null;individuals[l.id]=list||[...(DEFAULTS[l.id]||[])];if(!list)await dbPut('individuals',l.id,{list:individuals[l.id]});if(!pTimes[l.id])pTimes[l.id]={};individuals[l.id].forEach((_,i)=>{if(!pTimes[l.id][i])pTimes[l.id][i]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false}});if(!sRows[l.id])sRows[l.id]=[];if(!sIdC[l.id])sIdC[l.id]=1}}
-async function saveIndividuals(){await dbPut('individuals',curLoc,{list:individuals[curLoc]});const newPT={};individuals[curLoc].forEach((_,i)=>{newPT[i]=pTimes[curLoc][i]||{timeIn:'',timeOut:'',signedIn:false,fullyLocked:false}});pTimes[curLoc]=newPT}
+// Step 3: Drivers
+function rDrv(){const el=$('drvList');el.innerHTML='';const list=(drv[loc]||[]).slice().sort((a,b)=>(b.uses||0)-(a.uses||0));if(!list.length){el.innerHTML='<p style="color:var(--mut);text-align:center;padding:20px">No drivers yet — add one above</p>';$('s3n').disabled=true;return}list.forEach(d=>{const c=document.createElement('div');c.className='dc'+(selD===d.name?' sel':'');c.innerHTML=`<span class="ck">${selD===d.name?'✓':''}</span><span class="dn">${d.name}</span><span class="df">${d.uses||0} trips</span><button class="dx" onclick="event.stopPropagation();rmDrv('${d.name.replace(/'/g,"\\'")}')">✕</button>`;c.onclick=()=>{selD=selD===d.name?null:d.name;rDrv()};el.appendChild(c)});$('s3n').disabled=!selD}
+function addDrv(){const inp=$('newDrv');const nm=inp.value.trim();if(!nm)return;if(!drv[loc])drv[loc]=[];if(drv[loc].find(d=>d.name.toLowerCase()===nm.toLowerCase())){toast('Already exists');return}drv[loc].push({name:nm,uses:0,lastUsed:''});selD=nm;inp.value='';saveDrv();rDrv()}
+function rmDrv(nm){if(!confirm('Remove "'+nm+'"?'))return;drv[loc]=(drv[loc]||[]).filter(d=>d.name!==nm);if(selD===nm)selD=null;saveDrv();rDrv()}
+async function saveDrv(){await D('drivers',loc,{list:drv[loc]||[]})}
 
-// ================================================================
-// SETTINGS
-// ================================================================
-async function loadSettings(){const s=await dbGet('settings','admin');if(s&&s.email)$('admEmail').value=s.email}
-async function getPin(){const s=await dbGet('settings','admin');return(s&&s.pin)||'1234'}
-async function saveSetting(obj){const cur=(await dbGet('settings','admin'))||{};await dbPut('settings','admin',{...cur,...obj})}
+// Step 4: Action + Time
+function setAct(a){act=a;$('optIn').className='ao'+(a==='in'?' ai':'');$('optOut').className='ao'+(a==='out'?' ao-out':'');rCS()}
+function rCS(){const el=$('cSum');const pp=cP();let h=`<div class="cs-l">${act==='in'?'☀️ Arriving':'🌙 Departing'} · Driver: ${selD||'—'}</div>`;selP.forEach(i=>{const p=pp[i];if(p)h+=`<div class="cs-i"><span>${p.name}</span><span>${p.home}</span></div>`});selS.forEach(i=>{const r=(sr[loc]||[])[i];if(r)h+=`<div class="cs-i"><span>${r.name}</span><span>Staff</span></div>`});el.innerHTML=h}
+function doConfirm(){const time=$('wTime').value;if(!time){toast('Set a time');return}const pp=cP(),t=pt[loc];let c=0;selP.forEach(i=>{if(!t[i])t[i]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false,driver:''};if(act==='in'){if(!t[i].signedIn){t[i].timeIn=time;t[i].signedIn=true;t[i].driver=selD||'';c++}}else{if(t[i].signedIn&&!t[i].fullyLocked){t[i].timeOut=time;t[i].fullyLocked=true;c++}else if(!t[i].signedIn){t[i].timeIn=time;t[i].timeOut=time;t[i].signedIn=true;t[i].fullyLocked=true;t[i].driver=selD||'';c++}}});selS.forEach(i=>{const r=(sr[loc]||[])[i];if(!r)return;if(act==='in'){if(!r.signedIn){r.timeIn=time;r.signedIn=true;c++}}else{if(r.signedIn&&!r.fullyLocked){r.timeOut=time;r.fullyLocked=true;c++}}});if(selD&&drv[loc]){const d=drv[loc].find(d=>d.name===selD);if(d){d.uses=(d.uses||0)+1;d.lastUsed=today();saveDrv()}}schSave();toast(`✓ ${c} ${act==='in'?'checked in':'checked out'}`);const allDone=pp.every((_,i)=>!t[i]||!t[i].signedIn||t[i].fullyLocked);const anyDone=pp.some((_,i)=>t[i]&&t[i].fullyLocked);if(allDone&&anyDone&&act==='out'){saveDay();setTimeout(()=>{if(confirm('Everyone checked out! Generate report?'))rptToday()},500)}reset()}
 
-// ================================================================
-// REAL-TIME SYNC
-// ================================================================
-let activeSyncUnsub=null;
-let syncReady=false;
-function startRealtimeSync(){
-  setTimeout(()=>{syncReady=true},3000);
-  db.collection('state').doc('current').onSnapshot(doc=>{
-    if(suppressRemote||!syncReady||!doc.exists)return;
-    const s=doc.data();const dt=s._date;
-    if(dt&&/^\d{4}-\d{2}-\d{2}$/.test(dt)&&dt!==$('logDate').value&&document.activeElement!==$('logDate')){
-      $('logDate').value=dt;syncToDate(dt);
-    }
-  });
-  syncToDate($('logDate').value);
-  LOCS.forEach(l=>{
-    db.collection('individuals').doc(l.id).onSnapshot(doc=>{
-      if(suppressRemote||!doc.exists)return;const data=doc.data();
-      if(data&&data.list){individuals[l.id]=data.list;if(l.id===curLoc){rebuildAll();if(isAdminOpen())renderManage()}}
-    });
-  });
-}
-function syncToDate(dt){
-  if(activeSyncUnsub)activeSyncUnsub();
-  activeSyncUnsub=db.collection('state').doc('day_'+dt).onSnapshot(doc=>{
-    if(suppressRemote||!doc.exists)return;const s=doc.data();
-    if(s._driver&&document.activeElement!==$('driverName'))$('driverName').value=s._driver;
-    LOCS.forEach(l=>{if(s[l.id]){pTimes[l.id]=s[l.id].pTimes||{};sRows[l.id]=s[l.id].sRows||[];sIdC[l.id]=s[l.id].sIdC||1}});
-    const ae=document.activeElement;
-    const isEditing=ae&&(ae.classList.contains('p-time-input')||ae.classList.contains('s-input'));
-    if(!isEditing)rebuildAll();
-  });
-}
+// === AUTO-SAVE ===
+let svT=null,supp=false;
+function schSave(){clearTimeout(svT);svT=setTimeout(async()=>{supp=true;const dt=$('logDate').value,state={_driver:'',_date:dt};LOCS.forEach(l=>{state[l.id]={pTimes:pt[l.id]||{},sRows:sr[l.id]||[],sIdC:sic[l.id]||1}});await D('state','current',{_date:dt});await D('state','day_'+dt,state);$('sync').innerHTML='<span class="sd"></span> Saved '+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});setTimeout(()=>{supp=false},1000)},800)}
 
-// ================================================================
-// PAGE SWITCHING
-// ================================================================
-function goPage(p){
-  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
-  $(p).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.tab===p));
-  // Show/hide controls bar on staff/admin
-  $('controlsBar').style.display=(p==='pPage'||p==='staffPage')?'flex':'none';
-}
+// === DATA LOADING ===
+async function restore(){const cur=await G('state','current');let dt=(cur&&cur._date)||'';if(!/^\d{4}-\d{2}-\d{2}$/.test(dt))dt=today();$('logDate').value=dt;await loadDS(dt)}
+async function loadDS(dt){let s=await G('state','day_'+dt);if(!s){const old=await G('state','current');if(old&&old._driver!==undefined&&old._date===dt){s=old;await D('state','day_'+dt,old)}}if(!s){LOCS.forEach(l=>{pt[l.id]={};(ind[l.id]||[]).forEach((_,i)=>{pt[l.id][i]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false}});sr[l.id]=[];sic[l.id]=1});return}LOCS.forEach(l=>{pt[l.id]={};(ind[l.id]||[]).forEach((_,i)=>{pt[l.id][i]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false}});sr[l.id]=[];sic[l.id]=1;if(s[l.id]){const v=s[l.id];if(v.pTimes)Object.keys(v.pTimes).forEach(k=>{const p=v.pTimes[k];if(p.signedIn===undefined){p.signedIn=!!(p.timeIn);p.fullyLocked=!!(p.locked);delete p.locked}pt[l.id][k]=p});if(v.sRows){sr[l.id]=v.sRows;sr[l.id].forEach(r=>{if(r.signedIn===undefined){r.signedIn=!!(r.timeIn);r.fullyLocked=!!(r.locked);delete r.locked;if(r.lastName){r.name=(r.name+' '+(r.lastName||'')).trim();delete r.lastName}}})}if(v.sIdC)sic[l.id]=v.sIdC}})}
+async function loadInd(){for(const l of LOCS){const sv=await G('individuals',l.id);const list=sv&&sv.list?sv.list:null;ind[l.id]=list||[...(DEF[l.id]||[])];if(!list)await D('individuals',l.id,{list:ind[l.id]});if(!pt[l.id])pt[l.id]={};ind[l.id].forEach((_,i)=>{if(!pt[l.id][i])pt[l.id][i]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false}});if(!sr[l.id])sr[l.id]=[];if(!sic[l.id])sic[l.id]=1}}
+async function saveInd(){await D('individuals',loc,{list:ind[loc]});const np={};ind[loc].forEach((_,i)=>{np[i]=pt[loc][i]||{timeIn:'',timeOut:'',signedIn:false,fullyLocked:false}});pt[loc]=np}
+async function loadSet(){const s=await G('settings','admin');if(s&&s.email)$('admEmail').value=s.email}
+async function getPin(){const s=await G('settings','admin');return(s&&s.pin)||'1234'}
+async function savSet(o){const c=(await G('settings','admin'))||{};await D('settings','admin',{...c,...o})}
 
-// ================================================================
-// HOME FILTER
-// ================================================================
-function buildFilterRow(){
-  const el=$('filterRow');el.innerHTML='';
-  const pp=curP();const pt=pTimes[curLoc]||{};if(!pp.length)return;
-  const allFilled=pp.filter((_,i)=>pt[i]&&(pt[i].timeIn||pt[i].timeOut)).length;
-  const allBtn=document.createElement('button');
-  allBtn.className='filter-pill'+(activeHome==='ALL'?' active':'');
-  allBtn.innerHTML=`All <span class="pill-count">${allFilled}/${pp.length}</span>`;
-  allBtn.onclick=()=>{activeHome='ALL';buildFilterRow();renderP()};el.appendChild(allBtn);
-  curHomes().forEach(h=>{
-    const hp=pp.filter(p=>p.home===h);
-    const f=hp.filter(p=>{const gi=pp.indexOf(p);return pt[gi]&&(pt[gi].timeIn||pt[gi].timeOut)}).length;
-    const btn=document.createElement('button');btn.className='filter-pill'+(activeHome===h?' active':'');
-    btn.innerHTML=`${h} <span class="pill-count">${f}/${hp.length}</span>`;
-    btn.onclick=()=>{activeHome=h;buildFilterRow();renderP()};el.appendChild(btn);
-  });
-}
+// === SYNC ===
+let actUnsub=null,syncOK=false;
+function startSync(){setTimeout(()=>{syncOK=true},3000);db.collection('state').doc('current').onSnapshot(doc=>{if(supp||!syncOK||!doc.exists)return;const s=doc.data(),dt=s._date;if(dt&&/^\d{4}-\d{2}-\d{2}$/.test(dt)&&dt!==$('logDate').value){$('logDate').value=dt;syncDate(dt)}});syncDate($('logDate').value);LOCS.forEach(l=>{db.collection('individuals').doc(l.id).onSnapshot(doc=>{if(supp||!doc.exists)return;const d=doc.data();if(d&&d.list){ind[l.id]=d.list;if(l.id===loc&&step===1)rHomes()}})})}
+function syncDate(dt){if(actUnsub)actUnsub();actUnsub=db.collection('state').doc('day_'+dt).onSnapshot(doc=>{if(supp||!doc.exists)return;const s=doc.data();LOCS.forEach(l=>{if(s[l.id]){pt[l.id]=s[l.id].pTimes||{};sr[l.id]=s[l.id].sRows||[];sic[l.id]=s[l.id].sIdC||1}});if(step===1)rHomes()})}
 
-// ================================================================
-// PARTICIPANT RENDERING
-// ================================================================
-function renderP(){
-  const list=$('pList');const pp=curP();const pt=pTimes[curLoc]||{};list.innerHTML='';
-  if(!pp.length){$('pEmpty').style.display='block';$('pCount').textContent='0 / 0';return}
-  $('pEmpty').style.display='none';
-  const filtered=pp.map((p,i)=>({...p,idx:i})).filter(p=>activeHome==='ALL'||p.home===activeHome);
-  const signedIn=pp.filter((_,i)=>pt[i]&&pt[i].signedIn).length;
-  const locked=pp.filter((_,i)=>pt[i]&&pt[i].fullyLocked).length;
-  $('pCount').textContent=`${locked} locked · ${signedIn} in · ${pp.length} total`;
-  const admin=isAdminOpen();
+// === ADMIN ===
+function openAdmin(){$('admOv').classList.add('show');if(admOK){$('admLock').style.display='none';$('admD').style.display='block';$('manLoc').textContent=lS();$('logLoc').textContent=lS();rMng();lLogs();loadSet()}}
+function clAdm(){$('admOv').classList.remove('show')}
+async function doUnlock(){if($('pinIn').value===await getPin()){admOK=true;$('admLock').style.display='none';$('admD').style.display='block';$('manLoc').textContent=lS();$('logLoc').textContent=lS();rMng();lLogs();loadSet()}else{toast('Wrong PIN');$('pinIn').value=''}}
+async function doSetPin(){const n=$('newPin').value;if(n.length!==4||!/^\d+$/.test(n)){toast('4 digits');return}await savSet({pin:n});$('newPin').value='';toast('PIN updated')}
+$('pinIn').addEventListener('keydown',e=>{if(e.key==='Enter')doUnlock()});
 
-  filtered.forEach((p,animIdx)=>{
-    const s=pt[p.idx]||{timeIn:'',timeOut:'',signedIn:false,fullyLocked:false};
-    const card=document.createElement('div');
-    card.className='p-card';
-    card.style.animationDelay=`${animIdx*30}ms`;
+// Manage individuals
+function rMng(){const pp=cP(),list=$('manList'),chips=$('hChips'),homes=cH();chips.innerHTML=homes.length?homes.map(h=>`<span class="hchip">${h}<button onclick="rmHm('${h.replace(/'/g,"\\'")}')">✕</button></span>`).join(''):'<span style="font-size:.78rem;color:var(--mut)">No homes</span>';if(!pp.length){list.innerHTML='<p style="color:var(--mut);font-size:.82rem">No individuals.</p>';$('manCt').textContent='';return}const sorted=pp.map((p,i)=>({...p,oi:i})).sort((a,b)=>a.home.localeCompare(b.home)||a.name.localeCompare(b.name));list.innerHTML='';sorted.forEach(p=>{const r=document.createElement('div');r.className='mr';r.innerHTML=`<div><strong>${p.name}</strong><div style="font-size:.72rem;color:var(--mut)">${p.home} · AAI: ${p.aai||'—'}</div></div><button class="btn bd" onclick="rmInd(${p.oi})">Remove</button>`;list.appendChild(r)});$('manCt').textContent=pp.length+' individuals'}
+async function addInd(){const nm=$('addNm').value.trim(),hm=$('addHm').value.trim(),aa=$('addAai').value;if(!nm||!hm){toast('Name and home required');return}ind[loc].push({name:nm,home:hm,aai:aa});const i=ind[loc].length-1;if(!pt[loc])pt[loc]={};pt[loc][i]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false};await saveInd();$('addNm').value='';$('addHm').value='';rMng();if(step===1)rHomes();schSave();toast('Added '+nm)}
+async function rmInd(i){const p=ind[loc][i];if(!confirm('Remove '+p.name+'?'))return;ind[loc].splice(i,1);await saveInd();rMng();if(step===1)rHomes();schSave();toast('Removed')}
+async function rmHm(h){const c=ind[loc].filter(p=>p.home===h).length;if(!confirm('Remove "'+h+'" and '+c+' people?'))return;ind[loc]=ind[loc].filter(p=>p.home!==h);await saveInd();rMng();if(step===1)rHomes();schSave();toast('Removed '+h)}
 
-    if(s.fullyLocked){
-      card.classList.add('is-locked');
-      card.innerHTML=`
-        <div class="p-card-top">
-          <div><div class="p-name">${p.name}</div><div class="p-meta">${p.home} · AAI: ${p.aai||'—'}${s.driver?` · ${s.driver}`:''}</div></div>
-          <span class="p-status locked">✓ Locked</span>
-        </div>
-        <div class="p-card-actions">
-          <span class="p-time-display">${f12(s.timeIn)} → ${f12(s.timeOut)}</span>
-          ${admin?`<button class="btn btn-ghost btn-sm" onclick="unlockParticipant(${p.idx})">Unlock</button>`:''}
-        </div>`;
-    } else if(s.signedIn){
-      card.classList.add('is-signed-in');
-      card.innerHTML=`
-        <div class="p-card-top">
-          <div><div class="p-name">${p.name}</div><div class="p-meta">${p.home} · AAI: ${p.aai||'—'}${s.driver?` · ${s.driver}`:''}</div></div>
-          <span class="p-status signed-in">⏱ In</span>
-        </div>
-        <div class="p-card-actions">
-          <span class="p-time-display">In: ${f12(s.timeIn)}</span>
-          <button class="btn btn-out btn-sm" onclick="startAddOutTime('participant',${p.idx})">+ Out Time</button>
-          ${admin?`<button class="btn btn-ghost btn-sm" onclick="unlockParticipant(${p.idx})">Unlock</button>`:''}
-        </div>`;
-    } else {
-      card.innerHTML=`
-        <div class="p-card-top">
-          <div><div class="p-name">${p.name}</div><div class="p-meta">${p.home} · AAI: ${p.aai||'—'}</div></div>
-          <span class="p-status available">—</span>
-        </div>
-        <div class="p-card-actions">
-          <input type="time" class="p-time-input" value="${s.timeIn}" data-i="${p.idx}">
-          <button class="btn btn-sign-in btn-sm" onclick="signInParticipant(${p.idx})">Sign In</button>
-        </div>`;
-      card.querySelector('.p-time-input').addEventListener('change',e=>{
-        if(!pTimes[curLoc][p.idx])pTimes[curLoc][p.idx]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false};
-        pTimes[curLoc][p.idx].timeIn=e.target.value;scheduleSave();
-      });
-    }
-    list.appendChild(card);
-  });
-}
+// Logs
+function getPL(){const pp=cP(),t=pt[loc]||{};const fP=pp.map((p,i)=>({...p,idx:i})).filter(p=>t[p.idx]&&(t[p.idx].timeIn||t[p.idx].timeOut)).map(p=>({name:p.name,home:p.home,aai:p.aai,timeIn:t[p.idx].timeIn,timeOut:t[p.idx].timeOut,driver:t[p.idx].driver||''}));const fS=(sr[loc]||[]).filter(r=>r.name||r.timeIn).map(r=>({name:r.name,lastName:'',home:r.home,timeIn:r.timeIn,timeOut:r.timeOut}));return{date:$('logDate').value,driver:'',location:loc,locationName:lN(),participants:fP,staff:fS,savedAt:new Date().toISOString()}}
+async function saveDay(){const pl=getPL();if(!pl.date){toast('Set date');return}await D('logs',`${loc}_${pl.date}`,pl);toast('Saved: '+fD(pl.date));if(admOK)lLogs()}
+async function lLogs(){const all=await A('logs');const f=all.filter(i=>i.value.location===loc).sort((a,b)=>b.key.localeCompare(a.key));const el=$('logList');if(!f.length){el.innerHTML='<p style="color:var(--mut);font-size:.82rem">No saved logs.</p>';return}el.innerHTML='';f.forEach(item=>{const d=item.value,r=document.createElement('div');r.className='li';r.innerHTML=`<div><div class="ld">${fD(d.date)}</div><div class="linf">${(d.participants||[]).length}p · ${(d.staff||[]).length}s</div></div><div class="la"><button class="btn bg bs" onclick="vLog('${item.key}')">View</button><button class="btn bp bs" onclick="oRpt('${item.key}')">Report</button><button class="btn bd" onclick="dLog('${item.key}')">Del</button></div>`;el.appendChild(r)})}
+async function dLog(k){if(!confirm('Delete?'))return;await R('logs',k);toast('Deleted');lLogs()}
+async function vLog(k){const d=await G('logs',k);if(!d)return;vk=k;$('vT').textContent=`${d.locationName} — ${fD(d.date)}`;$('vS').textContent='Saved: '+new Date(d.savedAt).toLocaleString();let h='<div class="cl">Participants</div><table class="dt"><thead><tr><th>Name</th><th>Home</th><th>In</th><th>Out</th></tr></thead><tbody>';(d.participants||[]).forEach(p=>{h+=`<tr><td>${p.name}</td><td>${p.home}</td><td>${f12(p.timeIn)}</td><td>${f12(p.timeOut)}</td></tr>`});h+='</tbody></table>';$('vC').innerHTML=h;$('vOv').classList.add('show')}
 
-function signInParticipant(idx){
-  const pt=pTimes[curLoc];
-  if(!pt[idx])pt[idx]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false,driver:''};
-  if(!pt[idx].timeIn)pt[idx].timeIn=nowTime();
-  pt[idx].signedIn=true;pt[idx].driver=$('driverName').value||'';
-  scheduleSave();buildFilterRow();renderP();buildQGESelect();
-  toast('Signed in: '+curP()[idx].name.split(' ')[0]);
-}
-function unlockParticipant(idx){
-  if(!confirm('Unlock '+curP()[idx].name+'?'))return;
-  pTimes[curLoc][idx]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false};
-  scheduleSave();buildFilterRow();renderP();buildQGESelect();toast('Unlocked');
-}
+// Report
+function bRpt(d){const aP=(d.participants||[]).slice().sort((a,b)=>a.home.localeCompare(b.home));let pT='<table class="rt"><thead><tr><th>Name</th><th>Home</th><th>AAI</th><th>In</th><th>Out</th><th>Driver</th></tr></thead><tbody>';aP.forEach(p=>{pT+=`<tr><td>${p.name}</td><td>${p.home}</td><td>${p.aai||'—'}</td><td>${f12(p.timeIn)}</td><td>${f12(p.timeOut)}</td><td>${p.driver||'—'}</td></tr>`});pT+='</tbody></table>';const aS=(d.staff||[]).slice().sort((a,b)=>(a.home||'').localeCompare(b.home||''));let sT='<table class="rt st"><thead><tr><th>Name</th><th>House</th><th>In</th><th>Out</th></tr></thead><tbody>';aS.forEach(s=>{sT+=`<tr><td>${(s.name+' '+(s.lastName||'')).trim()}</td><td>${s.home||'—'}</td><td>${f12(s.timeIn)}</td><td>${f12(s.timeOut)}</td></tr>`});sT+='</tbody></table>';return`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${d.locationName} Report</title><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Fraunces:wght@700&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Outfit',sans-serif;color:#1c1c1e;font-size:11px}@media print{@page{margin:.4in;size:letter}.np{display:none!important}}.tb{position:sticky;top:0;background:#3d5a80;padding:10px 20px;display:flex;gap:10px;justify-content:center}.tb button{padding:8px 18px;border-radius:6px;border:0;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer}.t1{background:#fff;color:#3d5a80}.t2{background:rgba(255,255,255,.2);color:#fff}.rp{max-width:850px;margin:0 auto;padding:16px 30px}.bn{background:#3d5a80;color:#fff;padding:10px 16px;border-radius:8px;margin-bottom:12px}.bn .o{font-family:'Fraunces',serif;font-size:.9rem}.bn .s{font-size:.64rem;opacity:.8;margin-top:2px}.hd2{border-bottom:2px solid #3d5a80;padding-bottom:8px;margin-bottom:12px;display:flex;justify-content:space-between}.hd2 h1{font-family:'Fraunces',serif;font-size:1.1rem;color:#3d5a80}.hd2 .r{font-size:.7rem;color:#666}.sc{background:#f0f4f8;border-left:3px solid #3d5a80;padding:5px 10px;margin:10px 0 4px;font-weight:700;font-size:.72rem;color:#3d5a80}.sc.sf{border-color:#b56b45;color:#b56b45;background:#f5ebe4}.rt{width:100%;border-collapse:collapse;font-size:.68rem}.rt th{background:#3d5a80;color:#fff;padding:3px 6px;text-align:left;font-weight:600;font-size:.6rem;text-transform:uppercase}.rt.st th{background:#b56b45}.rt td{padding:2px 6px;border-bottom:1px solid #e8e8e8}.rt tr:nth-child(even){background:#fafaf8}.ft{margin-top:14px;padding-top:8px;border-top:1px solid #e0e0e0;font-size:.58rem;color:#999;text-align:right}</style></head><body><div class="tb np"><button class="t1" onclick="window.print()">Print / Save as PDF</button><button class="t2" onclick="window.close()">Close</button></div><div class="rp"><div class="bn"><div class="o">Our Lady of the Wayside — Home to Opportunity</div><div class="s">Pathways Day Program — Arrival / Departure Log</div></div><div class="hd2"><div><h1>${d.locationName}</h1></div><div class="r">Date: ${fD(d.date)}</div></div><div class="sc">Participants (${aP.length})</div>${pT}${aS.length?`<div class="sc sf">Staff (${aS.length})</div>${sT}`:''}<div class="ft">${d.locationName} · ${fD(d.date)}</div></div></body></html>`}
+async function oRpt(k){const d=typeof k==='string'?await G('logs',k):k;if(!d)return;const w=window.open('','_blank');if(w){w.document.write(bRpt(d));w.document.close()}else toast('Allow pop-ups')}
+async function rptToday(){await saveDay();oRpt(getPL())}
+function rptView(){if(vk)oRpt(vk)}
 
-// ================================================================
-// TIME OUT POPUP
-// ================================================================
-function startAddOutTime(type,idx){
-  pendingTO={type,idx};
-  const name=type==='participant'?curP()[idx].name:sRows[curLoc][idx].name;
-  $('toTitle').textContent='Add Out Time';$('toSub').textContent=name;
-  $('toTimeInput').value=nowTime();$('toOverlay').classList.add('show');
-}
-function closeTO(){$('toOverlay').classList.remove('show');pendingTO=null}
-function confirmTO(){
-  if(!pendingTO)return;const t=$('toTimeInput').value;if(!t){toast('Enter a time');return}
-  if(pendingTO.type==='participant'){
-    pTimes[curLoc][pendingTO.idx].timeOut=t;pTimes[curLoc][pendingTO.idx].fullyLocked=true;
-    buildFilterRow();renderP();buildQGESelect();checkAutoSave();
-  } else {
-    sRows[curLoc][pendingTO.idx].timeOut=t;sRows[curLoc][pendingTO.idx].fullyLocked=true;renderS();
-  }
-  scheduleSave();toast('Locked ✓');closeTO();
-}
-function checkAutoSave(){
-  const pt=pTimes[curLoc]||{};const pp=curP();
-  const stillIn=pp.filter((_,i)=>pt[i]&&pt[i].signedIn&&!pt[i].fullyLocked);
-  if(stillIn.length===0){const locked=pp.filter((_,i)=>pt[i]&&pt[i].fullyLocked);
-    if(locked.length>0){saveDay();setTimeout(()=>{if(confirm('All signed out! Generate report?'))reportToday()},500)}}
-}
-
-// ================================================================
-// STAFF
-// ================================================================
-function addStaff(){
-  if(!sRows[curLoc])sRows[curLoc]=[];if(!sIdC[curLoc])sIdC[curLoc]=1;
-  sRows[curLoc].push({id:sIdC[curLoc]++,name:'',home:'',timeIn:'',timeOut:'',signedIn:false,fullyLocked:false});
-  scheduleSave();renderS();
-}
-function signInStaff(idx){
-  const row=sRows[curLoc][idx];if(!row.name){toast('Enter a name first');return}
-  if(!row.timeIn)row.timeIn=nowTime();row.signedIn=true;
-  scheduleSave();renderS();toast('Signed in: '+row.name.split(' ')[0]);
-}
-function rmStaff(i){sRows[curLoc].splice(i,1);renderS();scheduleSave()}
-function unlockStaff(i){
-  if(!confirm('Unlock '+sRows[curLoc][i].name+'?'))return;
-  sRows[curLoc][i]={...sRows[curLoc][i],signedIn:false,fullyLocked:false,timeIn:'',timeOut:''};
-  scheduleSave();renderS();toast('Unlocked');
-}
-function renderS(){
-  const list=$('sList');const rows=sRows[curLoc]||[];list.innerHTML='';
-  let dl=document.createElement('datalist');dl.id='hl_'+curLoc;
-  curHomes().forEach(h=>{const o=document.createElement('option');o.value=h;dl.appendChild(o)});list.appendChild(dl);
-  const filled=rows.filter(r=>r.signedIn).length;
-  $('sCount').textContent=`${filled} of ${rows.length} staff`;
-  const admin=isAdminOpen();
-
-  rows.forEach((row,idx)=>{
-    const card=document.createElement('div');card.style.animationDelay=`${idx*30}ms`;
-    if(row.fullyLocked){
-      card.className='s-card is-locked';
-      card.innerHTML=`
-        <div style="display:flex;justify-content:space-between;align-items:flex-start">
-          <div><div class="p-name">${row.name}</div><div class="p-meta">${row.home||'—'}</div></div>
-          <span class="p-status locked">✓ Locked</span>
-        </div>
-        <div class="p-card-actions" style="margin-top:6px">
-          <span class="p-time-display">${f12(row.timeIn)} → ${f12(row.timeOut)}</span>
-          ${admin?`<button class="btn btn-ghost btn-sm" onclick="unlockStaff(${idx})">Unlock</button>`:''}
-        </div>`;
-    } else if(row.signedIn){
-      card.className='s-card is-signed-in';
-      card.innerHTML=`
-        <div style="display:flex;justify-content:space-between;align-items:flex-start">
-          <div><div class="p-name">${row.name}</div><div class="p-meta">${row.home||'—'}</div></div>
-          <span class="p-status signed-in">⏱ In</span>
-        </div>
-        <div class="p-card-actions" style="margin-top:6px">
-          <span class="p-time-display">In: ${f12(row.timeIn)}</span>
-          <button class="btn btn-out btn-sm" onclick="startAddOutTime('staff',${idx})">+ Sign Out</button>
-          ${admin?`<button class="btn btn-ghost btn-sm" onclick="unlockStaff(${idx})">Unlock</button>`:''}
-        </div>`;
-    } else {
-      card.className='s-card';
-      card.innerHTML=`
-        <div class="s-card-row">
-          <input type="text" class="s-input" placeholder="Full Name" value="${row.name}" data-i="${idx}" data-f="name">
-          <input type="text" class="s-input" style="max-width:130px" placeholder="Home" value="${row.home}" data-i="${idx}" data-f="home" list="hl_${curLoc}">
-          <input type="time" class="s-input" style="max-width:120px" value="${row.timeIn}" data-i="${idx}" data-f="timeIn">
-          <button class="btn btn-staff btn-sm" onclick="signInStaff(${idx})">Sign In</button>
-          <button class="btn-icon" onclick="rmStaff(${idx})" style="flex-shrink:0">✕</button>
-        </div>`;
-      card.querySelectorAll('input').forEach(inp=>{
-        const evType=inp.type==='time'?'change':'input';
-        inp.addEventListener(evType,e=>{const i=parseInt(e.target.dataset.i);sRows[curLoc][i][e.target.dataset.f]=e.target.value;scheduleSave()});
-      });
-    }
-    list.appendChild(card);
-  });
-}
-
-// ================================================================
-// QUICK GROUP ENTRY
-// ================================================================
-function toggleQGE(){$('qgePanel').classList.toggle('open')}
-function buildQGESelect(){
-  const sel=$('qgeSelect');sel.innerHTML='<option value="">— Choose participant —</option>';
-  const pp=curP();const pt=pTimes[curLoc]||{};
-  curHomes().forEach(h=>{
-    const grp=document.createElement('optgroup');grp.label=h;
-    pp.forEach((p,i)=>{if(p.home!==h)return;const s=pt[i]||{};
-      const o=document.createElement('option');o.value=i;o.textContent=p.name;
-      if(s.fullyLocked||qgeSel.has(i)){o.disabled=true;o.textContent+=s.fullyLocked?' ✓':' (added)'}
-      else if(s.signedIn){o.textContent+=' ⏱'}
-      grp.appendChild(o);
-    });sel.appendChild(grp);
-  });
-}
-function qgeAdd(){const idx=parseInt($('qgeSelect').value);if(isNaN(idx))return;qgeSel.add(idx);$('qgeSelect').value='';renderQGEChips();buildQGESelect();updateQGEBtn()}
-function qgeRemove(idx){qgeSel.delete(idx);renderQGEChips();buildQGESelect();updateQGEBtn()}
-function renderQGEChips(){
-  const el=$('qgeChips');if(!qgeSel.size){el.innerHTML='';return}
-  const pp=curP();
-  el.innerHTML=[...qgeSel].map(idx=>{const p=pp[idx];if(!p)return'';
-    return`<span class="qge-chip">${p.name}<button onclick="qgeRemove(${idx})">✕</button></span>`}).join('');
-}
-function updateQGEBtn(){
-  const btn=$('qgeLogBtn');const has=qgeSel.size>0;const hasTimes=$('qgeTimeIn').value||$('qgeTimeOut').value;
-  btn.disabled=!(has&&hasTimes);btn.textContent=has?`Log (${qgeSel.size})`:'Log';
-}
-function qgeLogTimes(){
-  const tIn=$('qgeTimeIn').value;const tOut=$('qgeTimeOut').value;
-  if(!tIn&&!tOut){toast('Enter at least one time');return}if(!qgeSel.size)return;
-  const pt=pTimes[curLoc];const driverName=$('driverName').value||'';
-  qgeSel.forEach(idx=>{
-    if(!pt[idx])pt[idx]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false,driver:''};
-    if(tIn&&!pt[idx].signedIn){pt[idx].timeIn=tIn;pt[idx].signedIn=true;pt[idx].driver=driverName}
-    if(tOut){pt[idx].timeOut=tOut;pt[idx].fullyLocked=true;
-      if(!pt[idx].signedIn){pt[idx].timeIn=tIn||nowTime();pt[idx].signedIn=true;pt[idx].driver=driverName}}
-  });
-  const count=qgeSel.size;qgeSel.clear();$('qgeTimeIn').value='';$('qgeTimeOut').value='';
-  renderQGEChips();buildQGESelect();updateQGEBtn();scheduleSave();buildFilterRow();renderP();
-  toast(`✓ Logged ${count} participant${count>1?'s':''}`);if(tOut)checkAutoSave();
-}
-document.addEventListener('DOMContentLoaded',()=>{
-  $('qgeTimeIn').addEventListener('change',updateQGEBtn);
-  $('qgeTimeOut').addEventListener('change',updateQGEBtn);
-});
-
-// ================================================================
-// ADMIN
-// ================================================================
-async function unlock(){if($('pinIn').value===await getPin()){$('aLock').style.display='none';$('aDash').classList.add('unlocked');$('manLoc').textContent=locShort();$('logLoc').textContent=locShort();renderManage();loadLogs();loadSettings();renderP();renderS()}else{toast('Wrong PIN');$('pinIn').value=''}}
-async function setPin(){const n=$('newPin').value;if(n.length!==4||!/^\d+$/.test(n)){toast('PIN must be 4 digits');return}await saveSetting({pin:n});$('newPin').value='';toast('PIN updated!')}
-
-// ================================================================
-// MANAGE INDIVIDUALS
-// ================================================================
-function renderManage(){
-  const pp=curP();const list=$('manList');const chips=$('homeChips');const homes=curHomes();
-  chips.innerHTML=homes.length?homes.map(h=>`<span class="home-chip">${h}<button onclick="rmHome('${h.replace(/'/g,"\\'")}')">✕</button></span>`).join(''):'<span style="font-size:.78rem;color:var(--text-secondary)">No homes yet</span>';
-  if(!pp.length){list.innerHTML='<div class="empty-state"><b>No individuals</b><span>Use the form above to add participants.</span></div>';$('manCt').textContent='';return}
-  const sorted=pp.map((p,i)=>({...p,oi:i})).sort((a,b)=>a.home.localeCompare(b.home)||a.name.localeCompare(b.name));
-  list.innerHTML='';
-  sorted.forEach(p=>{const row=document.createElement('div');row.className='manage-row';
-    row.innerHTML=`<div><span class="manage-name">${p.name}</span><div class="manage-detail">${p.home} · AAI: ${p.aai||'—'}</div></div><button class="btn btn-danger btn-sm" onclick="rmInd(${p.oi})">Remove</button>`;
-    list.appendChild(row)});
-  $('manCt').textContent=`${pp.length} individuals`;
-}
-async function addInd(){const nm=$('addName').value.trim();const hm=$('addHome').value.trim();const aa=$('addAAI').value;if(!nm){toast('Enter a name');return}if(!hm){toast('Enter a home');return}individuals[curLoc].push({name:nm,home:hm,aai:aa});const idx=individuals[curLoc].length-1;if(!pTimes[curLoc])pTimes[curLoc]={};pTimes[curLoc][idx]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false};await saveIndividuals();$('addName').value='';$('addHome').value='';renderManage();rebuildAll();scheduleSave();toast('Added '+nm)}
-async function rmInd(idx){const p=individuals[curLoc][idx];if(!confirm(`Remove ${p.name}?`))return;individuals[curLoc].splice(idx,1);await saveIndividuals();renderManage();rebuildAll();scheduleSave();toast('Removed '+p.name)}
-async function rmHome(h){const count=individuals[curLoc].filter(p=>p.home===h).length;if(!confirm(`Remove "${h}" and all ${count} individual(s)?`))return;individuals[curLoc]=individuals[curLoc].filter(p=>p.home!==h);await saveIndividuals();renderManage();rebuildAll();scheduleSave();toast('Removed '+h)}
-
-// ================================================================
-// SAVE / LOAD / DELETE LOGS
-// ================================================================
-function getPayload(){
-  const pp=curP();const pt=pTimes[curLoc]||{};
-  const filledP=pp.map((p,i)=>({...p,idx:i})).filter(p=>pt[p.idx]&&(pt[p.idx].timeIn||pt[p.idx].timeOut)).map(p=>({name:p.name,home:p.home,aai:p.aai,timeIn:pt[p.idx].timeIn,timeOut:pt[p.idx].timeOut,driver:pt[p.idx].driver||''}));
-  const filledS=(sRows[curLoc]||[]).filter(r=>r.name||r.timeIn).map(r=>({name:r.name,lastName:'',home:r.home,timeIn:r.timeIn,timeOut:r.timeOut}));
-  return{date:$('logDate').value,driver:$('driverName').value,location:curLoc,locationName:locName(),participants:filledP,staff:filledS,savedAt:new Date().toISOString()};
-}
-let pendingSaveForce=false;
-async function saveDay(){
-  const pl=getPayload();if(!pl.date){toast('Set a date first');return}
-  const pt=pTimes[curLoc]||{};const pp=curP();
-  const missing=pp.filter((_,i)=>pt[i]&&pt[i].signedIn&&!pt[i].fullyLocked);
-  if(missing.length>0&&!pendingSaveForce){showMissingConfirm(missing);return}
-  pendingSaveForce=false;
-  await dbPut('logs',`${curLoc}_${pl.date}`,pl);
-  const em=$('admEmail').value;if(em)await saveSetting({email:em});
-  toast('Log saved: '+fD(pl.date));loadLogs();
-}
-function showMissingConfirm(missing){
-  $('confirmList').innerHTML=missing.map(p=>`<div class="confirm-item"><span>${p.name}</span><span style="color:var(--amber)">In: ${f12(pTimes[curLoc][curP().indexOf(p)].timeIn)}</span></div>`).join('');
-  $('confirmOv').classList.add('show');
-}
-function closeConfirm(){$('confirmOv').classList.remove('show')}
-function confirmSaveAnyway(){closeConfirm();pendingSaveForce=true;saveDay()}
-
-async function loadLogs(){
-  const all=await dbAll('logs');const filtered=all.filter(i=>i.value.location===curLoc).sort((a,b)=>b.key.localeCompare(a.key));
-  const el=$('logList');
-  if(!filtered.length){el.innerHTML='<p style="color:var(--text-secondary);font-size:.82rem">No saved logs.</p>';return}
-  el.innerHTML='';
-  filtered.forEach(item=>{const d=item.value;const row=document.createElement('div');row.className='log-item';
-    row.innerHTML=`<div><div class="log-date">${fD(d.date)}</div><div class="log-info">${(d.participants||[]).length} participants · ${(d.staff||[]).length} staff</div></div>
-      <div class="log-actions">
-        <button class="btn btn-ghost btn-sm" onclick="loadLog('${item.key}')">Load</button>
-        <button class="btn btn-ghost btn-sm" onclick="viewLog('${item.key}')">View</button>
-        <button class="btn btn-primary btn-sm" onclick="openReport('${item.key}')">Report</button>
-        <button class="btn btn-danger btn-sm" onclick="delLog('${item.key}')">Del</button>
-      </div>`;el.appendChild(row)});
-}
-async function loadLog(k){
-  const d=await dbGet('logs',k);if(!d)return;
-  if(!confirm(`Load ${fD(d.date)}? This replaces current data.`))return;
-  $('logDate').value=d.date;$('driverName').value=d.driver||'';
-  curP().forEach((_,i)=>{pTimes[curLoc][i]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false}});
-  (d.participants||[]).forEach(sp=>{const idx=curP().findIndex(p=>p.name===sp.name);if(idx!==-1){pTimes[curLoc][idx]={timeIn:sp.timeIn||'',timeOut:sp.timeOut||'',signedIn:!!(sp.timeIn),fullyLocked:false}}});
-  sRows[curLoc]=(d.staff||[]).map((s,i)=>({id:i+1,name:(s.name+' '+(s.lastName||'')).trim(),home:s.home||'',timeIn:s.timeIn||'',timeOut:s.timeOut||'',signedIn:!!(s.timeIn),fullyLocked:false}));
-  sIdC[curLoc]=sRows[curLoc].length+1;qgeSel.clear();scheduleSave();rebuildAll();goPage('pPage');
-  toast(`Loaded ${fD(d.date)}`);
-}
-async function delLog(k){if(!confirm('Delete this log?'))return;await dbDel('logs',k);toast('Deleted');loadLogs()}
-async function viewLog(k){
-  const d=await dbGet('logs',k);if(!d)return;vKey=k;
-  $('vT').textContent=`${d.locationName} — ${fD(d.date)}`;
-  $('vS').textContent=`Driver: ${d.driver||'—'} · Saved: ${new Date(d.savedAt).toLocaleString()}`;
-  let html='<div class="ctrl-label">Participants</div><table class="data-table"><thead><tr><th>Name</th><th>Home</th><th>AAI</th><th>In</th><th>Out</th></tr></thead><tbody>';
-  (d.participants||[]).forEach(p=>{html+=`<tr><td>${p.name}</td><td>${p.home}</td><td>${p.aai}</td><td>${f12(p.timeIn)}</td><td>${f12(p.timeOut)}</td></tr>`});
-  html+='</tbody></table><div class="ctrl-label" style="margin-top:12px">Staff</div><table class="data-table"><thead><tr><th>Name</th><th>House</th><th>In</th><th>Out</th></tr></thead><tbody>';
-  (d.staff||[]).forEach(s=>{html+=`<tr><td>${s.name} ${s.lastName||''}</td><td>${s.home||'—'}</td><td>${f12(s.timeIn)}</td><td>${f12(s.timeOut)}</td></tr>`});
-  html+='</tbody></table>';$('vC').innerHTML=html;$('vOv').classList.add('show');
-}
-
-// ================================================================
-// REPORT
-// ================================================================
-function buildReportHTML(d){
-  const allP=(d.participants||[]).slice().sort((a,b)=>a.home.localeCompare(b.home)||a.name.localeCompare(b.name));
-  let pTable='<table class="rt"><thead><tr><th>Name</th><th>Home</th><th>AAI</th><th>Time In</th><th>Time Out</th><th>Driver</th></tr></thead><tbody>';
-  allP.forEach(p=>{pTable+=`<tr><td>${p.name}</td><td>${p.home}</td><td>${p.aai||'—'}</td><td>${f12(p.timeIn)}</td><td>${f12(p.timeOut)}</td><td>${p.driver||'—'}</td></tr>`});
-  pTable+='</tbody></table>';
-  const allS=(d.staff||[]).slice().sort((a,b)=>(a.home||'').localeCompare(b.home||''));
-  let sTable='<table class="rt st"><thead><tr><th>Name</th><th>House</th><th>Time In</th><th>Time Out</th></tr></thead><tbody>';
-  allS.forEach(s=>{sTable+=`<tr><td>${(s.name+' '+(s.lastName||'')).trim()}</td><td>${s.home||'—'}</td><td>${f12(s.timeIn)}</td><td>${f12(s.timeOut)}</td></tr>`});
-  sTable+='</tbody></table>';
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-<title>${d.locationName} — Report ${fD(d.date)}</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Fraunces:wght@700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Outfit',sans-serif;color:#1c1c1e;background:#fff;font-size:11px}
-@media print{@page{margin:.4in;size:letter}.no-print{display:none!important}}
-.toolbar{position:sticky;top:0;background:#3d5a80;padding:10px 20px;display:flex;gap:10px;justify-content:center}
-.toolbar button{padding:8px 18px;border-radius:6px;border:none;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer}
-.tb-p{background:#fff;color:#3d5a80}.tb-c{background:rgba(255,255,255,.2);color:#fff}
-.report{max-width:850px;margin:0 auto;padding:16px 30px}
-.banner{background:#3d5a80;color:#fff;padding:10px 16px;border-radius:8px;margin-bottom:12px}
-.banner .org{font-family:'Fraunces',serif;font-size:.9rem}
-.banner .sub{font-size:.64rem;opacity:.8;margin-top:2px}
-.hdr{border-bottom:2px solid #3d5a80;padding-bottom:8px;margin-bottom:12px;display:flex;justify-content:space-between}
-.hdr h1{font-family:'Fraunces',serif;font-size:1.1rem;color:#3d5a80}
-.hdr h2{font-size:.72rem;font-weight:600;color:#333}
-.hdr .right{text-align:right;font-size:.7rem;color:#666}
-.sec{background:#f0f4f8;border-left:3px solid #3d5a80;padding:5px 10px;margin:10px 0 4px;font-weight:700;font-size:.72rem;color:#3d5a80;display:flex;justify-content:space-between}
-.sec.staff{border-color:#b56b45;color:#b56b45;background:#f5ebe4}
-.sec .cnt{font-size:.6rem;background:#fff;padding:2px 7px;border-radius:10px}
-.rt{width:100%;border-collapse:collapse;font-size:.68rem;margin-bottom:2px}
-.rt th{background:#3d5a80;color:#fff;padding:3px 6px;text-align:left;font-weight:600;font-size:.6rem;text-transform:uppercase;letter-spacing:.3px}
-.rt.st th{background:#b56b45}
-.rt td{padding:2px 6px;border-bottom:1px solid #e8e8e8}.rt tr:nth-child(even){background:#fafaf8}
-.footer{margin-top:14px;padding-top:8px;border-top:1px solid #e0e0e0;font-size:.58rem;color:#999;text-align:right}
-</style></head><body>
-<div class="toolbar no-print">
-  <button class="tb-p" onclick="window.print()">Print / Save as PDF</button>
-  <button class="tb-c" onclick="window.close()">Close</button>
-</div>
-<div class="report">
-  <div class="banner"><div class="org">Our Lady of the Wayside — Home to Opportunity</div><div class="sub">Pathways Day Program — Arrival / Departure Log</div></div>
-  <div class="hdr"><div><h1>${d.locationName}</h1><h2>Daily Attendance Report</h2></div><div class="right">Date: ${fD(d.date)}</div></div>
-  <div class="sec">Participant Log<span class="cnt">${allP.length}</span></div>${pTable}
-  ${allS.length?`<div class="sec staff">Staff Log<span class="cnt">${allS.length}</span></div>${sTable}`:''}
-  <div class="footer">${d.locationName} · ${fD(d.date)}</div>
-</div></body></html>`;
-}
-async function openReport(key){const d=typeof key==='string'?await dbGet('logs',key):key;if(!d)return;const html=buildReportHTML(d);const w=window.open('','_blank');if(w){w.document.write(html);w.document.close()}else toast('Allow pop-ups')}
-async function reportToday(){await saveDay();openReport(getPayload())}
-function reportViewed(){if(vKey)openReport(vKey)}
-
-// ================================================================
 // CSV
-// ================================================================
-function mkCSV(d){
-  let c=`${d.locationName} — ${fD(d.date)}\n\nPARTICIPANTS\nName,Home,AAI,Time In,Time Out,Driver\n`;
-  (d.participants||[]).forEach(p=>{c+=`"${p.name}","${p.home}","${p.aai}","${f12(p.timeIn)}","${f12(p.timeOut)}","${p.driver||d.driver||''}"\n`});
-  c+=`\nSTAFF\nName,House,Time In,Time Out\n`;
-  (d.staff||[]).forEach(s=>{c+=`"${s.name} ${s.lastName||''}","${s.home||''}","${f12(s.timeIn)}","${f12(s.timeOut)}"\n`});return c;
-}
-async function dlCSV(k){const d=await dbGet('logs',k);if(!d)return;dlFile(mkCSV(d),`pathways_${d.location}_${d.date}.csv`,'text/csv');toast('CSV downloaded')}
-async function exportAllCSV(){const all=await dbAll('logs');const filt=all.filter(i=>i.value.location===curLoc);if(!filt.length){toast('No logs');return}let c='Date,Location,Type,Name,Home,AAI,Time In,Time Out,Driver\n';filt.forEach(i=>{const d=i.value;(d.participants||[]).forEach(p=>{c+=`"${d.date}","${d.locationName}","Participant","${p.name}","${p.home}","${p.aai}","${f12(p.timeIn)}","${f12(p.timeOut)}","${p.driver||d.driver||''}"\n`});(d.staff||[]).forEach(s=>{c+=`"${d.date}","${d.locationName}","Staff","${s.name} ${s.lastName||''}","${s.home||''}","","${f12(s.timeIn)}","${f12(s.timeOut)}",""\n`})});dlFile(c,`pathways_${curLoc}_all.csv`,'text/csv');toast('Exported')}
-function cpViewCSV(){if(!vKey)return;dbGet('logs',vKey).then(d=>{if(!d)return;navigator.clipboard.writeText(mkCSV(d)).then(()=>toast('CSV copied!'))})}
+function mkCSV(d){let c=`${d.locationName} — ${fD(d.date)}\n\nPARTICIPANTS\nName,Home,AAI,Time In,Time Out,Driver\n`;(d.participants||[]).forEach(p=>{c+=`"${p.name}","${p.home}","${p.aai}","${f12(p.timeIn)}","${f12(p.timeOut)}","${p.driver||''}"\n`});c+=`\nSTAFF\nName,House,Time In,Time Out\n`;(d.staff||[]).forEach(s=>{c+=`"${s.name} ${s.lastName||''}","${s.home||''}","${f12(s.timeIn)}","${f12(s.timeOut)}"\n`});return c}
+async function expCSV(){const all=await A('logs');const f=all.filter(i=>i.value.location===loc);if(!f.length){toast('No logs');return}let c='Date,Location,Type,Name,Home,AAI,In,Out,Driver\n';f.forEach(i=>{const d=i.value;(d.participants||[]).forEach(p=>{c+=`"${d.date}","${d.locationName}","P","${p.name}","${p.home}","${p.aai}","${f12(p.timeIn)}","${f12(p.timeOut)}","${p.driver||''}"\n`});(d.staff||[]).forEach(s=>{c+=`"${d.date}","${d.locationName}","S","${s.name}","${s.home||''}","","${f12(s.timeIn)}","${f12(s.timeOut)}",""\n`})});dl(c,`pathways_${loc}_all.csv`,'text/csv');toast('Exported')}
+function cpVCSV(){if(!vk)return;G('logs',vk).then(d=>{if(!d)return;navigator.clipboard.writeText(mkCSV(d)).then(()=>toast('CSV copied'))})}
 
-// ================================================================
-// SUMMARY
-// ================================================================
-function showSum(){
-  const d=getPayload();
-  $('sumSub').textContent=`${d.locationName} · ${fD(d.date)} · ${d.participants.length} participants · ${d.staff.length} staff`;
-  const pb=$('sumPB');pb.innerHTML='';d.participants.forEach(p=>{pb.innerHTML+=`<tr><td>${p.name}</td><td>${p.home}</td><td>${p.aai}</td><td>${f12(p.timeIn)}</td><td>${f12(p.timeOut)}</td><td>${p.driver||d.driver||'—'}</td></tr>`});
-  const sb=$('sumSB');sb.innerHTML='';d.staff.forEach(s=>{sb.innerHTML+=`<tr><td>${s.name}</td><td>${s.home||'—'}</td><td>${f12(s.timeIn)}</td><td>${f12(s.timeOut)}</td></tr>`});
-  $('sumOv').classList.add('show');
-}
-function cpTxt(){const d=getPayload();let t=`${d.locationName} — ${fD(d.date)}\nDriver: ${d.driver||'—'}\n\nPARTICIPANTS\n`;d.participants.forEach(p=>{t+=`${p.name} | ${p.home} | ${p.aai} | ${f12(p.timeIn)} | ${f12(p.timeOut)}\n`});t+=`\nSTAFF\n`;d.staff.forEach(s=>{t+=`${s.name} | ${s.home||''} | ${f12(s.timeIn)} | ${f12(s.timeOut)}\n`});navigator.clipboard.writeText(t).then(()=>toast('Copied!'))}
-function cpCSV(){navigator.clipboard.writeText(mkCSV(getPayload())).then(()=>toast('CSV copied!'))}
+// Summary
+function showSum(){const d=getPL();$('sumSub').textContent=`${d.locationName} · ${fD(d.date)} · ${d.participants.length}p · ${d.staff.length}s`;$('sumPB').innerHTML='';d.participants.forEach(p=>{$('sumPB').innerHTML+=`<tr><td>${p.name}</td><td>${p.home}</td><td>${f12(p.timeIn)}</td><td>${f12(p.timeOut)}</td><td>${p.driver||'—'}</td></tr>`});$('sumSB').innerHTML='';d.staff.forEach(s=>{$('sumSB').innerHTML+=`<tr><td>${s.name}</td><td>${s.home||'—'}</td><td>${f12(s.timeIn)}</td><td>${f12(s.timeOut)}</td></tr>`});$('sumOv').classList.add('show')}
+function cpTxt(){const d=getPL();let t=`${d.locationName} — ${fD(d.date)}\n\nPARTICIPANTS\n`;d.participants.forEach(p=>{t+=`${p.name} | ${p.home} | ${f12(p.timeIn)} | ${f12(p.timeOut)}\n`});t+=`\nSTAFF\n`;d.staff.forEach(s=>{t+=`${s.name} | ${f12(s.timeIn)} | ${f12(s.timeOut)}\n`});navigator.clipboard.writeText(t).then(()=>toast('Copied'))}
+function cpCSV(){navigator.clipboard.writeText(mkCSV(getPL())).then(()=>toast('CSV copied'))}
+function clrToday(){if(!confirm("Clear all today's data?"))return;cP().forEach((_,i)=>{pt[loc][i]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false}});sr[loc]=[];sic[loc]=1;$('logDate').value=today();schSave();reset();toast('Cleared')}
+$('admEmail').addEventListener('change',e=>savSet({email:e.target.value}));
 
-// ================================================================
-// CLEAR TODAY
-// ================================================================
-function clearToday(){
-  if(!confirm("Clear all today's data for this location?"))return;
-  curP().forEach((_,i)=>{pTimes[curLoc][i]={timeIn:'',timeOut:'',signedIn:false,fullyLocked:false}});
-  sRows[curLoc]=[];sIdC[curLoc]=1;$('driverName').value='';$('logDate').value=todayISO();
-  qgeSel.clear();scheduleSave();rebuildAll();toast('Cleared');
-}
-
-// ================================================================
-// BOOT
-// ================================================================
-$('logDate').value=todayISO();
-$('driverName').addEventListener('input',scheduleSave);
-$('logDate').addEventListener('change',async e=>{
-  const newDate=e.target.value;
-  await dbPut('state','current',{_date:newDate});
-  if(typeof syncToDate==='function')syncToDate(newDate);
-  await loadDateState(newDate);qgeSel.clear();rebuildAll();resetInactivityTimer();
-  toast('Switched to '+fD(newDate));
-});
-$('pinIn').addEventListener('keydown',e=>{if(e.key==='Enter')unlock()});
-$('admEmail').addEventListener('change',e=>saveSetting({email:e.target.value}));
-
-// Inactivity timer
-let inactivityTimer=null;
-function resetInactivityTimer(){
-  clearTimeout(inactivityTimer);
-  if($('logDate').value!==todayISO()){
-    inactivityTimer=setTimeout(async()=>{
-      const today=todayISO();if($('logDate').value!==today){
-        $('logDate').value=today;await dbPut('state','current',{_date:today});
-        if(typeof syncToDate==='function')syncToDate(today);
-        await loadDateState(today);qgeSel.clear();rebuildAll();toast('Returned to today');
-      }
-    },60000);
-  }
-}
-['click','touchstart','keydown','scroll','input'].forEach(evt=>{document.addEventListener(evt,resetInactivityTimer,{passive:true})});
-
-// Live clock
-let lastClockDate='';
-function updateClock(){
-  const now=new Date();
-  $('liveClock').textContent=now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-  const today=todayISO();
-  if(lastClockDate&&today!==lastClockDate&&$('logDate').value===lastClockDate){$('logDate').value=today;$('logDate').dispatchEvent(new Event('change'))}
-  lastClockDate=today;
-}
-updateClock();setInterval(updateClock,1000);
-
-(async function(){
-  await loadIndividuals();await restoreState();
-  await dbPut('state','current',{_date:$('logDate').value});
-  buildLocSelect();switchLoc(curLoc);startRealtimeSync();
-})();
+// === BOOT ===
+$('logDate').value=today();
+$('logDate').addEventListener('change',async e=>{const dt=e.target.value;await D('state','current',{_date:dt});if(typeof syncDate==='function')syncDate(dt);await loadDS(dt);reset();toast('Switched to '+fD(dt))});
+$('newDrv').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addDrv()}});
+let lcd='';function uClock(){const n=new Date();$('clock').textContent=n.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});const td=today();if(lcd&&td!==lcd&&$('logDate').value===lcd){$('logDate').value=td;$('logDate').dispatchEvent(new Event('change'))}lcd=td}uClock();setInterval(uClock,1000);
+let iT=null;function rIT(){clearTimeout(iT);if($('logDate').value!==today()){iT=setTimeout(async()=>{const td=today();if($('logDate').value!==td){$('logDate').value=td;await D('state','current',{_date:td});if(typeof syncDate==='function')syncDate(td);await loadDS(td);reset();toast('Returned to today')}},60000)}}['click','touchstart','keydown','scroll','input'].forEach(e=>document.addEventListener(e,rIT,{passive:true}));
+(async()=>{await loadInd();await restore();for(const l of LOCS){const sv=await G('drivers',l.id);drv[l.id]=sv&&sv.list?sv.list:[]}await D('state','current',{_date:$('logDate').value});bLB();$('hdT').textContent=lS();bSB();rHomes();startSync()})();
 </script>
 </body>
 </html>
